@@ -1,0 +1,59 @@
+---
+B01:
+  Schulform: Bildungsgang Berufsfachschule
+  Bereich: Bereich Sozial- und Gesundheitswesen
+  Abschluss: true
+C05:
+  Schulform: Bildungsgang Fachoberschule
+  Bereich: Fachrichtung Gesundheit und Soziales
+C06:
+  Schulform: Bildungsgang Fachoberschule
+  Bereich: Fachrichtung Gesundheit und Soziales
+E01:
+  Schulform: Fachschule im Bereich Sozialwesen
+  Bereich: Fachrichtung Heilpädagogik
+E04:
+  Schulform: Fachschule im Bereich Sozialwesen
+  Bereich:
+
+E05:
+  Schulform: Fachschule im Bereich Sozialwesen
+  10-101-01: Fachrichtung Heilerziehungspflege
+  100-102-01: Fachrichtung Sozialpädagogik
+  #PIA
+  40-101-05: Fachrichtung Heilerziehungspflege #\nPraxisintegrierte Form
+  40-102-05: Fachrichtung Sozialpädagogik #\nPraxisintegrierte Form
+  Abschluss: true
+D01:
+  Schulform: Berufliches Gymnasium
+  Bereich: Bildungsgang Erzieher/AHR\nSchwerpunkt Erziehung und Soziales
+
+Fachgruppe:
+  B01:
+    10: Berufsübergreifender Bereich
+    20: Berufsbezogener Bereich
+    30: Differenzierungsbereich
+  C05:
+    10: Berufsübergreifender Bereich
+    20: Berufsbezogener Bereich
+    30: Differenzierungsbereich
+  C06:
+    10: Berufsübergreifender Bereich
+    20: Berufsbezogener Bereich
+    30: Differenzierungsbereich
+  E04:
+    10: Fachrichtungsübergreifender Bereich
+    20: Fachrichtungsbezogener Bereich
+    30: Differenzierungsbereich
+  E05:
+    10: Fachrichtungsübergreifender Bereich
+    20: Fachrichtungsbezogener Bereich
+    30: Differenzierungsbereich
+    10-101-01: Heilerziehungspflegerische Schwerpunkte
+    100-102-01: Bildungsbereiche in der Kinder- und Jugendarbeit
+    #PIA
+    40-101-05: Heilerziehungspflegerische Schwerpunkte
+    40-102-05: Bildungsbereiche in der Kinder- und Jugendarbeit
+Keine_Fehlstunden:
+  -E04
+  -E05

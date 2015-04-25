@@ -1,0 +1,10 @@
+source "http://rubygems.org"
+  gem 'envyable'
+  gem 'sequel'
+  gem 'mysql2'
+  gem 'json'
+  gem 'schild', '>= 0.3'
+  gem 'sinatra'
+  gem 'sass'
+  gem 'slim'
+  gem 'puma'

@@ -1,0 +1,27 @@
+# hier die Daten für den Datenbankzugriff eintragen
+# über sahib.rb kann man einstellen, welche DB verwendet wird
+# in der Standardeinstellung
+
+# anschließend umebenennen in config/env.yml
+
+development:
+  S_ADAPTER: mysql2
+  S_HOST: 192.168.178.55
+  S_USER: schild
+  S_PASSWORD: schild_passwort
+  S_DB: schild_db
+
+testing:
+  S_ADAPTER: mysql2
+  S_HOST: localhost
+  S_USER: schild
+  S_PASSWORD: schild
+  S_DB: schild-test
+
+production:
+  S_ADAPTER: mysql2
+  S_HOST: 10.10.0.5
+  S_USER: schild_in_echt
+  S_PASSWORD: geheimes_passwort
+  S_DB: schild_echte_db
+

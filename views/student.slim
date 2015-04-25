@@ -1,0 +1,25 @@
+.row
+  .col-md-12
+    h1 #{s.Vorname} #{s.Name} #{s.Geschlecht == 3 ? "♂" : "♀"}
+    h3 #{s.Klasse}, #{s.Geschlecht == 3 ? s.fachklasse.Bezeichnung : s.fachklasse.Beschreibung_W }
+  .col-md-6
+    -abschnitte = AbschnittePresenter.new(s)
+    table.table.table-condensed
+      tr
+        th Fach
+        -abschnitte.jahr_und_abschnitt.each do |a|
+          th
+            a.btn.btn-default.btn-xs href="/hjz/#{s.ID}/#{a[:jahr]}/#{a[:abschnitt]}" #{a[:schuljahr]}, #{a[:abschnitt]}
+      -abschnitte.noten.each_pair do |k,v|
+        tr
+          td #{k}
+          -v.each do |n|
+            td #{n}
+      tr
+        th Fehlstunden
+        -abschnitte.fehlstunden.each do |fstd|
+          td #{fstd}
+      tr
+        th unentschudigt
+        -abschnitte.fehlstunden_ue.each do |fstd_ue|
+          td #{fstd_ue}

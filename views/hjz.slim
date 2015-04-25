@@ -1,0 +1,85 @@
+doctype 5
+html lang="en"
+  head
+    meta charset="utf-8"
+    title #{title}
+    link href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="all" type="text/css"
+    link href="/css/print.css" rel="stylesheet" media="all"
+  body
+    .container
+      .page
+        .subpage
+          .row
+            .col-xs-12
+              img src="/images/zeugnis_logo_dummy.svg" width="100%"
+          .row
+            .col-xs-12
+              h4
+                | #{yaml[s.ASDSchulform]['Schulform'] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"}
+                br
+                | #{yaml[s.ASDSchulform]['Bereich'] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"}
+              .voffset-20
+                b #{s.anrede} #{s.vorname.strip} #{s.name.strip}
+              |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort.strip}
+              br
+                |besuchte das 1. Halbjahr des Schuljahres #{s.schuljahr} in der Klasse #{s.klasse}
+              .voffset-20
+                |Leistungen laut Konferenzbeschluss vom #{(hj.konferenzdatum).strftime("%d.%m.%Y")}:
+          .row
+            .col-xs-11
+              table.col-xs-11.table-noten
+                -hj.faechergruppen.each do |gruppe|
+                  -unless gruppe.empty?
+                    tr
+                      td
+                        b #{yaml["Fachgruppe"][schueler.ASDSchulform][gruppe.first.fachgruppe_ID] rescue "Fachgruppen für Bildungsgang anlegen"}
+                      td
+                    -gruppe.each_with_index do |fach,i|
+                      tr
+                        td
+                          .fach-bezeichnung
+                            =fach.bezeichnung
+                        td.fach-note
+                          =fach.note
+          .row
+            .col-xs-12
+              hr
+              |Fehlstunden: #{hj.sum_fehl_std}, davon unentschuldigt: #{hj.sum_fehl_std_u}
+              .voffset-20
+                b Bemerkungen
+              -if !hj.zeugnis_bem.empty? || hj.noten.any?{ |n| n.noten_krz == "5" || n.noten_krz == "6" }
+                -if hj.zeugnis_bem
+                  =(hj.zeugnis_bem).strip
+                -if hj.noten.any? { |n| n.noten_krz == "5" || n.noten_krz == "6" }
+                  -if s.abschluss_datum.include? (hj.jahr.to_s)
+                    |Nicht ausreichende Leistungen gefährden den Abschluss.
+                  -else
+                    |Nicht ausreichende Leistungen gefährden die Versetzung.
+              -else
+                |keine
+          .row
+            .box-datum
+              .col-xs-12
+                  |#{Schule.ort}, #{hj.zeugnis_datum.strftime("%d.%m.%Y")}
+          .row
+            .box-unterschrift
+              .col-xs-4.text-center
+                hr
+                |#{hj.v_name_klassenlehrer} – #{hj.klassenlehrer_in}
+              .col-xs-4
+                |Siegel
+              -if !s.volljaehrig?
+                .col-xs-4.text-center
+                  hr
+                  |Erziehungsberechtige
+          .row
+            .box-kleingedrucktes
+              .col-xs-12
+                  |Schulnummer: #{Schule.schulnummer}
+                  br
+                    |Notenstufen gemäß § 48 Abs. 3 Schulgesetz
+                  |Bei der Bewertung einzelner Schülerleistungen sowie in Zeugnissen werden folgende Notenstufen zugrunde gelegt:
+                  br
+                    |1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend
+        .seitenlogo
+          img src="/images/seiten_logo.svg" height="160px"
