@@ -1,3 +1,28 @@
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/texgyreheros-regular-webfont.woff') format('woff');
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/texgyreheros-bold-webfont.woff') format('woff');
+  font-style: normal;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/texgyreheros-italic-webfont.woff') format('woff');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'TeX Gyre Heros';
+  src: url('/fonts/texgyreheros-bolditalic-webfont.woff') format('woff');
+  font-style: italic;
+  font-weight: bold;
+}
 hr {
   border-color: #000;
   height: 1px;
