@@ -18,9 +18,8 @@ html lang="en"
             | Klasse oder Nachname eingeben, um Schüler auszuwählen
       .row
         .col-md-5
-          form#search-form action="/app/search" method="get" name="search" role="search"
+          form#search-form action="/suche" method="get" name="search" role="search"
             .input-group
-              input#hiddeninput type="hidden" name="search_id"
               input.form-control.input-lg#searchinput placeholder=("Suchen …") type="text" /
               span.input-group-btn
                 button.btn.btn-default.btn-lg type="submit" Suchen
@@ -34,16 +33,26 @@ html lang="en"
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
           limit: 30,
-          remote: '/search/autocomplete.json?pattern=%QUERY'
+          remote: '/suche/schueler/autocomplete.json?pattern=%QUERY'
         });
-
+        var klassen = new Bloodhound({
+          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          limit: 30,
+          remote: '/suche/klassen/autocomplete.json?pattern=%QUERY'
+        });
         schueler.initialize();
+        klassen.initialize();
 
         $("#searchinput").typeahead(null, {
           name: 'name',
           displayKey: 'value',
+          source: klassen.ttAdapter()
+        },
+        { name: 'name',
+          displayKey: 'value',
           source: schueler.ttAdapter()
-        }).on("typeahead:selected typeahead:autocompleted", function(e,datum) { $("#hiddeninput").val(datum.id); });
+        }).on("typeahead:selected typeahead:autocompleted", function(e, datum) { window.location.href = datum.link; });
         $("#searchinput").focus();
       }).call(this);
   /! Font Awesome by Dave Gandy - http://fontawesome.io
