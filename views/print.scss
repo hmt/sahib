@@ -33,12 +33,17 @@ hr {
   margin-bottom: 1em;
 }
 .fach-bezeichnung {
-  margin-left: 20mm;
+  padding-left: 10mm;
 }
 .fach-note {
   background-color: #c0c0c0 !important;
   text-align: center;
   border: 5px white solid;
+  padding-left: 5mm;
+  padding-right: 5mm;
+}
+.lernbereich {
+  padding-left: 20mm;
 }
 .box-datum {
   position: absolute;
