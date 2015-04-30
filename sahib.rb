@@ -9,7 +9,22 @@ Envyable.load('./config/env.yml', 'development')
 require 'schild'
 include Schild
 yaml = YAML.load_file('./config/strings.yml')
-Slim::Engine.set_default_options pretty: true
+
+configure do
+  Slim::Engine.set_options pretty: true
+  PDFKit.configure do |config|
+    config.wkhtmltopdf = '/usr/bin/wkhtmltopdf'
+    config.default_options = {
+      :margin_bottom => '0mm',
+      :margin_top => '0mm',
+      :margin_left => '0mm',
+      :margin_right => '0mm',
+      :page_size => 'A4',
+      :orientation => 'Portrait',
+      :print_media_type => true
+    }
+  end
+end
 
 helpers do
   def partial(template, locals = {})

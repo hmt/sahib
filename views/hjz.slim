@@ -1,9 +1,10 @@
+-PDFKit::configure{|config| config.default_options[:orientation] = 'Portrait'; config.default_options[:page_size] = 'A4'}
 doctype 5
 html lang="en"
   head
     meta charset="utf-8"
     title #{title}
-    link href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="all" type="text/css"
+    link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="all" type="text/css"
     link href="/css/print.css" rel="stylesheet" media="all"
     link href="/css/print_a4.css" rel="stylesheet" media="all"
   body
@@ -91,4 +92,4 @@ html lang="en"
                   br
                     |1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend
         .seitenlogo
-          img src="/images/seiten_logo.svg" height="160px"
+          img src="/images/#{ENV['S_LOGO_SEITE']}" height="160px"
