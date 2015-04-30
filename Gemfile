@@ -3,7 +3,7 @@ source "http://rubygems.org"
   gem 'sequel'
   gem 'mysql2'
   gem 'json'
-  gem 'schild', '>= 0.3'
+  gem 'schild', :github => 'hmt/schild', :branch => 'master'
   gem 'sinatra'
   gem 'sass'
   gem 'slim'
