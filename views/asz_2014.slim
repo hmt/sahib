@@ -45,6 +45,7 @@ html lang="en"
                           tr
                             td.fach-bezeichnung class=("lernbereich" if fach.fach.SortierungS2.to_s[-1] == "1")
                               =fach.bezeichnung
+                              =" *)" if fach.fach.GewichtungFHR
                             /td=fach.fach.SortierungS2
                             td.fach-note
                               =fach.note
