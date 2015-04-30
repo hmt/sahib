@@ -4,7 +4,8 @@ require 'sass'
 require 'json'
 require 'envyable'
 # environment verwenden
-Envyable.load('./config/env.yml', 'testing')
+#Envyable.load('./config/env.yml', 'testing')
+Envyable.load('./config/env.yml', 'development')
 require 'schild'
 include Schild
 yaml = YAML.load_file('./config/strings.yml')
@@ -20,7 +21,25 @@ helpers do
   end
 end
 
-class AbschnittePresenter < Schild::Abschnitt
+class SchuelerPresenter
+  def initialize(s)
+    @s = s
+  end
+
+  def klasse
+    @s.first.Klasse
+  end
+
+  def anzahl
+    @s.count
+  end
+
+  def schueler_details
+    @s.map{ |s| {:name => s.Name, :vorname => s.Vorname, :adresse => "#{s.Strasse}, #{s.PLZ} #{s.OrtAbk}", :telefon => s.Telefon}}
+  end
+end
+
+class AbschnittePresenter
   def initialize(s)
     @abschnitte = s.abschnitte
   end
@@ -69,23 +88,46 @@ get '/' do
   slim :home
 end
 
-get '/app/search' do
-  if params[:search_id]
-    redirect "/student/#{params[:search_id]}"
+get '/suche/schueler/autocomplete.json' do
+  content_type :json
+  schueler = Schueler.where(Sequel.ilike(:Name, "#{params[:pattern]}%")).limit(30)
+  schueler = schueler.map{ |s| { :value => "#{s.Name}, #{s.Vorname} (#{s.Klasse})", :link => "/schueler/#{s.ID}"} }.to_json
+end
+
+get '/suche/klassen/autocomplete.json' do
+  content_type :json
+  klassen = Schueler.where(Sequel.ilike(:Klasse, "#{params[:pattern]}%")).all
+  klassen = klassen.group_by{ |k| k.Klasse }
+  if klassen.empty?
+    404
   else
-    redirect '/'
+    ret = klassen.map do |klasse,schueler|
+      if klasse.downcase == params[:pattern].downcase || klassen.count == 1
+        jahrgaenge = schueler.group_by{ |s| s.AktSchuljahr }
+        jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count}), #{jahrgang}", :link => "/klasse/#{klasse}/#{jahrgang}"} }
+      else
+        {:value => "#{klasse} (#{schueler.count})", :link => "/klasse/#{klasse}"}
+      end
+    end
+    ret.flatten.to_json
   end
 end
 
-get '/search/autocomplete.json' do
-  content_type :json
-  schueler = Schueler.where(Sequel.ilike(:Name, "#{params[:pattern]}%")).or(Sequel.ilike(:Klasse, "#{params[:pattern]}%")).limit(30)
-  schueler.map{ |s| {:id => s.ID, :name => s.Name, :vorname => s.Vorname, :klasse => s.Klasse, :value => "#{s.Name}, #{s.Vorname}, #{s.Klasse}"} }.to_json
-end
-
-get '/student/:id' do
+get '/schueler/:id' do
   schueler = Schueler[params[:id]]
   slim :student, :locals => { :s => schueler, :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
+end
+
+get '/klasse/:name' do
+  halt 404, "noch nicht fertig"
+  schueler = Schueler.where(:Klasse => params[:name]).all
+  slim :klassen, :locals => {:schueler => schueler, :title => "Übersicht #{params[:name]}"}
+end
+
+get '/klasse/:name/:jahrgang' do
+  halt 404, "noch nicht fertig"
+  schueler = Schueler.where(:Klasse => params[:name], :AktSchuljahr => params[:jahrgang])
+  slim :klasse, :locals => {:schueler => schueler, :title => params[:name]}
 end
 
 get '/:doc/:id/:jahr/:abschnitt' do
