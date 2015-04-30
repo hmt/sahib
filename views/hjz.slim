@@ -33,15 +33,23 @@ html lang="en"
                   -unless gruppe.empty?
                     tr
                       td
-                        b #{yaml["Fachgruppe"][schueler.ASDSchulform][gruppe.first.fachgruppe_ID] rescue "Fachgruppen für Bildungsgang anlegen"}
+                        b #{yaml["Fachgruppe"][s.ASDSchulform][gruppe.first.fachgruppe_ID] rescue "Fachgruppen für Bildungsgang anlegen"}
                       td
+                    -lernbereich_ab = gruppe.index{ |f| f.fach.SortierungS2.to_s[-1] == "1"}
                     -gruppe.each_with_index do |fach,i|
+                      -if i == lernbereich_ab
+                        tr
+                          td.fach-bezeichnung colspan="2"
+                            =yaml["Fachgruppe"][s.ASDSchulform][s.fachklasse.Kennung] rescue "Lernbereich in strings.yml angeben"
                       tr
-                        td
-                          .fach-bezeichnung
-                            =fach.bezeichnung
+                        td.fach-bezeichnung class=("lernbereich" if fach.fach.SortierungS2.to_s[-1] == "1")
+                          =fach.bezeichnung
+                        /td=fach.fach.SortierungS2
                         td.fach-note
                           =fach.note
+                        -if fach.Lernentw
+                          tr
+                            td.fach-bezeichnung Thema: #{fach.Lernentw}
           .row
             .col-xs-12
               hr

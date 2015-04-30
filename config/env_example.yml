@@ -10,6 +10,8 @@ development:
   S_USER: schild
   S_PASSWORD: schild_passwort
   S_DB: schild_db
+  S_LOGO_TOP: zeugnis_logo.svg
+  S_LOGO_SEITE: seiten_logo.svg
 
 testing:
   S_ADAPTER: mysql2
@@ -17,6 +19,8 @@ testing:
   S_USER: schild
   S_PASSWORD: schild
   S_DB: schild-test
+  S_LOGO_TOP: zeugnis_logo.svg
+  S_LOGO_SEITE: seiten_logo.svg
 
 production:
   S_ADAPTER: mysql2
@@ -24,4 +28,6 @@ production:
   S_USER: schild_in_echt
   S_PASSWORD: geheimes_passwort
   S_DB: schild_echte_db
+  S_LOGO_TOP: zeugnis_logo.svg
+  S_LOGO_SEITE: seiten_logo.svg
 

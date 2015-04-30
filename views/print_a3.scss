@@ -1,0 +1,28 @@
+.page {
+  position: relative;
+  // 296 für Chrome, andere sind mit 197 ok
+  width: 420mm;
+  height: 296mm;
+  padding: 10mm 25mm 10mm 25mm;
+  background-color: #ffeaea;
+  -webkit-print-color-adjust: exact;
+}
+.subpage {
+  font: 10pt "Tex Gyre Heros" !important;
+  background-color: white;
+  position: relative;
+  min-height: 100%;
+}
+@media print {
+  @page {
+    size: A3 landscape;
+  }
+  .container {
+    padding: 0;
+    margin: 0;
+  }
+  .page {
+    page-break-after: always;
+  }
+}
+
