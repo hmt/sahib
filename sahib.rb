@@ -147,6 +147,6 @@ end
 
 get '/:doc/:id/:jahr/:abschnitt' do
   schueler = Schueler.where(:ID => params[:id]).first
-  slim params[:doc].to_sym, :layout => false,  :locals => { :yaml => yaml, :s => schueler, :hj => schueler.halbjahr(params[:jahr], params[:abschnitt]), :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
+  slim params[:doc].to_sym, :locals => { :yaml => yaml, :s => schueler, :hj => schueler.halbjahr(params[:jahr], params[:abschnitt]), :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
 end
 

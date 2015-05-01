@@ -6,7 +6,7 @@
     -abschnitte = AbschnittePresenter.new(s)
     table.table.table-condensed
       tr
-        th Fach
+        th Zeugnis/Abschnitt
         -abschnitte.jahr_und_abschnitt.each do |a|
           th
             a.btn.btn-default.btn-xs href="/hjz/#{s.ID}/#{a[:jahr]}/#{a[:abschnitt]}" #{a[:schuljahr]}, #{a[:abschnitt]}
@@ -14,7 +14,7 @@
         tr
           td #{k}
           -v.each do |n|
-            td #{n}
+            td.td-center #{n}
       tr
         th Fehlstunden
         -abschnitte.fehlstunden.each do |fstd|

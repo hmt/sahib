@@ -12,17 +12,18 @@ html lang="en"
     link href="/css/app.css" rel="stylesheet"
   body
     .container
-      .row
+      .row.hidden-print
         .col-md-12
           h3
             | Klasse oder Nachname eingeben, um Schüler auszuwählen
-      .row
+      .row.hidden-print
         .col-md-5
-          form#search-form action="/suche" method="get" name="search" role="search"
+          form#search-form name="search" role="search"
             .input-group
               input.form-control.input-lg#searchinput placeholder=("Suchen …") type="text" /
               span.input-group-btn
-                button.btn.btn-default.btn-lg type="submit" Suchen
+                button.btn.btn-default.btn-lg Suchen
+          .voffset-20
       ==yield
     script src="http://cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"
     script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"

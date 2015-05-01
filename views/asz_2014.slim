@@ -1,96 +1,88 @@
 - PDFKit::configure{|config| config.default_options[:orientation] = 'Landscape'; config.default_options[:page_size] = 'A3'}
-doctype 5
-html lang="en"
-  head
-    meta charset="utf-8"
-    title #{title}
-    link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="all" type="text/css"
-    link href="/css/print.css" rel="stylesheet" media="all"
-    link href="/css/print_a3.css" rel="stylesheet" media="all"
-  body
-    .container
-      .page
-        .subpage
-          .row
-            .col-xs-6
-              .row
-                .col-xs-12
-                  b #{s.anrede} #{s.vorname.strip} #{s.name.strip}
-                  br /
-                  |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort.strip}
-                  br /
-                  |war vom #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} bis zur Aushändigung des Zeugnisses
-                  br /
-                  |#{s.schueler_in} der #{yaml[s.ASDSchulform]['Schulform'] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"} 
-                  br /
-                  |in der #{yaml[s.ASDSchulform]['Bereich']||yaml[s.ASDSchulform][s.fachklasse.Kennung] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"}
-                  br /
-                  |Der allgemeine Prüfungsausschuss stellte in seiner Abschlusskonferenz am #{(hj.konferenzdatum).strftime("%d.%m.%Y")} fest:
-                  .voffset-20
-                  b Leistungen
-              .row
-                .col-xs-10
-                  table.col-xs-11.table-noten
-                    -hj.faechergruppen.each do |gruppe|
-                      -unless gruppe.empty?
-                        tr
-                          td
-                            b #{yaml["Fachgruppe"][s.ASDSchulform][gruppe.first.fachgruppe_ID] rescue "Fachgruppen für Bildungsgang anlegen"}
-                          td
-                        -lernbereich_ab = gruppe.index{ |f| f.fach.SortierungS2.to_s[-1] == "1"}
-                        -gruppe.each_with_index do |fach,i|
-                          -if i == lernbereich_ab
-                            tr
-                              td.fach-bezeichnung colspan="2"
-                                =yaml["Fachgruppe"][s.ASDSchulform][s.fachklasse.Kennung] rescue "Lernbereich in strings.yml angeben"
-                          tr
-                            td.fach-bezeichnung class=("lernbereich" if fach.fach.SortierungS2.to_s[-1] == "1")
-                              =fach.bezeichnung
-                              =" *)" if fach.fach.GewichtungFHR
-                            /td=fach.fach.SortierungS2
-                            td.fach-note
-                              =fach.note
-                            -if fach.Lernentw
-                              tr
-                                td.fach-bezeichnung Thema: #{fach.Lernentw}
-              .row
-                .col-xs-12
-                  hr
-                  .voffset-20
-                  b Bemerkungen
-                  -if !hj.zeugnis_bem.empty?
-                    =(hj.zeugnis_bem).strip
-                  -else
-                    br /
-                    |keine
-            .col-xs-6
-              .row
-                .col-xs-12
-                  |#{s.anrede} #{s.vorname} #{s.name} hat das staatliche
-                  h3.text-center
-                    =yaml[s.ASDSchulform]["Examen"]
-                  |am #{hj.zeugnis_datum.strftime("%d.%m.%Y")} bestanden. <- ändern!
-              .row
-                .col-xs-10
-                  /table.col-xs-11.table-noten
-                  b
-                    |Tabelle mit den Abschlussarbeiten, BP, Kolloquium, Note BP
-              .row
-                .col-xs-12
-                  |#{s.anrede} #{s.vorname} #{s.name} ist berechtigt, die Berufsbezeichnung
-                  h3.text-center
-                    =s.berufsbezeichnung_mw
-                  |zu führen.
-                  .voffset-20
-                    |Der Abschluss ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau #{s.fachklasse.dqr_niveau} zugeordnet.
+link href="/css/print.css" rel="stylesheet" media="all"
+link href="/css/print_a3.css" rel="stylesheet" media="all"
+.page
+  .subpage
+    .row
+      .col-xs-6
         .row
-          / 12er zeile, weil die box unabhängig ist.
-          .col-xs-6
-            .box-kleingedrucktes
-              |Notenstufen gemäß § 48 Abs. 3 Schulgesetz
+          .col-xs-12
+            b #{s.anrede} #{s.vorname.strip} #{s.name.strip}
+            br /
+            |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort.strip}
+            br /
+            |war vom #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} bis zur Aushändigung des Zeugnisses
+            br /
+            |#{s.schueler_in} der #{yaml[s.ASDSchulform]['Schulform'] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"} 
+            br /
+            |in der #{yaml[s.ASDSchulform]['Bereich']||yaml[s.ASDSchulform][s.fachklasse.Kennung] rescue "Bildungsgang '#{s.ASDSchulform}' in config/strings.yml anlegen"}
+            br /
+            |Der allgemeine Prüfungsausschuss stellte in seiner Abschlusskonferenz am #{(hj.konferenzdatum).strftime("%d.%m.%Y")} fest:
+            .voffset-20
+            b Leistungen
+        .row
+          .col-xs-10
+            table.col-xs-11.table-noten
+              -hj.faechergruppen.each do |gruppe|
+                -unless gruppe.empty?
+                  tr
+                    td
+                      b #{yaml["Fachgruppe"][s.ASDSchulform][gruppe.first.fachgruppe_ID] rescue "Fachgruppen für Bildungsgang anlegen"}
+                    td
+                  -lernbereich_ab = gruppe.index{ |f| f.fach.SortierungS2.to_s[-1] == "1"}
+                  -gruppe.each_with_index do |fach,i|
+                    -if i == lernbereich_ab
+                      tr
+                        td.fach-bezeichnung colspan="2"
+                          =yaml["Fachgruppe"][s.ASDSchulform][s.fachklasse.Kennung] rescue "Lernbereich in strings.yml angeben"
+                    tr
+                      td.fach-bezeichnung class=("lernbereich" if fach.fach.SortierungS2.to_s[-1] == "1")
+                        =fach.bezeichnung
+                        =" *)" if fach.fach.GewichtungFHR
+                      /td=fach.fach.SortierungS2
+                      td.fach-note
+                        =fach.note
+                      -if fach.Lernentw
+                        tr
+                          td.fach-bezeichnung Thema: #{fach.Lernentw}
+        .row
+          .col-xs-12
+            hr
+            .voffset-20
+            b Bemerkungen
+            -if !hj.zeugnis_bem.empty?
+              =(hj.zeugnis_bem).strip
+            -else
               br /
-              |1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend
-              br /
-              | *) Die Noten der mit *) gekennzeichneten Fächer gehen in die Berechnung der Durchnittsnote für die Fachochschulreife ein.
-        .seitenlogo
-          img src="/images/#{ENV['S_LOGO_SEITE']}" height="160px"
+              |keine
+      .col-xs-6
+        .row
+          .col-xs-12
+            |#{s.anrede} #{s.vorname} #{s.name} hat das staatliche
+            h3.text-center
+              =yaml[s.ASDSchulform]["Examen"]
+            |am #{hj.zeugnis_datum.strftime("%d.%m.%Y")} bestanden. <- ändern!
+        .row
+          .col-xs-10
+            /table.col-xs-11.table-noten
+            b
+              |Tabelle mit den Abschlussarbeiten, BP, Kolloquium, Note BP
+        .row
+          .col-xs-12
+            |#{s.anrede} #{s.vorname} #{s.name} ist berechtigt, die Berufsbezeichnung
+            h3.text-center
+              =s.berufsbezeichnung_mw
+            |zu führen.
+            .voffset-20
+              |Der Abschluss ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau #{s.fachklasse.dqr_niveau} zugeordnet.
+  .row
+    / 12er zeile, weil die box unabhängig ist.
+    .col-xs-6
+      .box-kleingedrucktes
+        |Notenstufen gemäß § 48 Abs. 3 Schulgesetz
+        br /
+        |1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft, 6 = ungenügend
+        br /
+        | *) Die Noten der mit *) gekennzeichneten Fächer gehen in die Berechnung der Durchnittsnote für die Fachochschulreife ein.
+  .seitenlogo
+    img src="/images/#{ENV['S_LOGO_SEITE']}" height="160px"
