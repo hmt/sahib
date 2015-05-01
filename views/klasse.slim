@@ -1,7 +1,10 @@
 .row
   .col-md-12
-    h1 =k.klasse
-    h2 =k.bildungsgang
+    h1
+      =k.klasse
+      small  #{k.bildungsgang}
+    small =k.klassenlehrer
+.row
   .col-md-10
     h3 Aktive Schüler
     table.table.table-condensed
@@ -23,6 +26,8 @@
           td class=(s[:volljaehrig] ? "success" : "danger")
             =s[:geburtsdatum]
 
+.row.hidden-print
+  .col-md-10
     h3 Inktive Schüler
     table.table.table-condensed
       tr
@@ -34,7 +39,8 @@
         th Geburtsdatum
       -k.schueler_details(k.inaktive_schueler).each_with_index do |s,i|
         tr.clickable-row data-url="/schueler/#{s[:id]}"
-          td =i+1
+          td class=(s[:volljaehrig] ? "success" : "danger")
+            =i+1
           td =s[:vorname]
           td =s[:name]
           td =s[:adresse]

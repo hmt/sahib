@@ -1,7 +1,10 @@
 .row
   .col-md-12
     h1 #{s.Vorname} #{s.Name} #{s.Geschlecht == 3 ? "♂" : "♀"}
-    h3 #{s.Klasse}, #{s.Geschlecht == 3 ? s.fachklasse.Bezeichnung : s.fachklasse.Beschreibung_W }
+    h3
+      a href="/klasse/#{s.Klasse}/#{s.AktSchuljahr}"
+        =s.klasse
+      |, #{s.berufsbezeichnung_mw}
   .col-md-6
     -abschnitte = AbschnittePresenter.new(s)
     table.table.table-condensed
@@ -18,8 +21,8 @@
       tr
         th Fehlstunden
         -abschnitte.fehlstunden.each do |fstd|
-          td #{fstd}
+          td.td-center #{fstd}
       tr
         th unentschudigt
         -abschnitte.fehlstunden_ue.each do |fstd_ue|
-          td #{fstd_ue}
+          td.td-center #{fstd_ue}
