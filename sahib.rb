@@ -106,7 +106,11 @@ end
 get '/suche/schueler/autocomplete.json' do
   content_type :json
   schueler = Schueler.where(Sequel.ilike(:Name, "#{params[:pattern]}%")).limit(30)
-  schueler = schueler.map{ |s| { :value => "#{s.Name}, #{s.Vorname} (#{s.Klasse})", :link => "/schueler/#{s.ID}"} }.to_json
+  if schueler.empty?
+    halt 404
+  else
+    schueler = schueler.map{ |s| { :value => "#{s.Name}, #{s.Vorname} (#{s.Klasse})", :link => "/schueler/#{s.ID}"} }.to_json
+  end
 end
 
 get '/suche/klassen/autocomplete.json' do
