@@ -21,7 +21,7 @@ GEM
     rack-protection (1.5.3)
       rack
     sass (3.4.13)
-    sequel (4.21.0)
+    sequel (4.22.0)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
