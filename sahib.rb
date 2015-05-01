@@ -105,7 +105,16 @@ get '/klasse/:name/:jahrgang' do
 end
 
 get '/:doc/:id/:jahr/:abschnitt' do
-  schueler = Schueler.where(:ID => params[:id]).first
-  slim params[:doc].to_sym, :locals => { :yaml => yaml, :s => schueler, :hj => schueler.halbjahr(params[:jahr], params[:abschnitt]), :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
+  schueler = Schueler.where(:ID => params[:id])
+  if schueler.count == 0
+    schueler = Schueler.where(:Status => 2, :Klasse => params[:id])
+  end
+  klasse = SchuelerPresenter.new(schueler)
+  slim params[:doc].to_sym, :locals => { :yaml => yaml,
+                                         :schueler => schueler.all,
+                                         :jahr => params[:jahr],
+                                         :abschnitt => params[:abschnitt],
+                                         :k => klasse,
+                                         :title => "#{klasse.klasse}" }
 end
 

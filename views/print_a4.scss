@@ -5,6 +5,11 @@
   height: 296mm;
   padding: 10mm 25mm 10mm 25mm;
   background-color: #ffeaea;
+  border: 1px solid black;
+  -webkit-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
+  -moz-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
+  box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
+  margin-bottom: 10px;
   -webkit-print-color-adjust: exact;
 }
 .subpage {
@@ -23,6 +28,11 @@
   }
   .page {
     page-break-after: always;
+    border: none;
+    margin-bottom: 0px;
+    -webkit-box-shadow:initial;
+    -moz-box-shadow:initial;
+    box-shadow: initial;
   }
 }
 

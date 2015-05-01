@@ -1,11 +1,23 @@
 .row
-  .col-md-12
+  .col-xs-6
     h1
       =k.klasse
       small  #{k.bildungsgang}
     small =k.klassenlehrer
+  .col-xs-4
+    h1 #{k.akt_jahr}, #{k.akt_abschnitt}
+    .btn-group.hidden-print
+      a.btn.btn-primary.btn-lg type="button" href="/hjz/#{k.klasse}/#{k.akt_jahr}/#{k.akt_abschnitt}"
+        | Zeugnisse drucken
+      button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+        span.caret
+      ul.dropdown-menu role="menu"
+        -k.abschnitte.reverse[1..-1].each do |a|
+          li
+            a href="/hjz/#{k.klasse}/#{a[:jahr]}/#{a[:abschnitt]}"
+              ="#{a[:schuljahr]}, #{a[:abschnitt]}"
 .row
-  .col-md-10
+  .col-xs-10
     h3 Aktive Schüler
     table.table.table-condensed
       tr
@@ -27,7 +39,7 @@
             =s[:geburtsdatum]
 
 .row.hidden-print
-  .col-md-10
+  .col-xs-10
     h3 Inktive Schüler
     table.table.table-condensed
       tr
