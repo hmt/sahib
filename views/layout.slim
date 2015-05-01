@@ -55,5 +55,7 @@ html lang="en"
           source: schueler.ttAdapter()
         }).on("typeahead:selected typeahead:autocompleted", function(e, datum) { window.location.href = datum.link; });
         $("#searchinput").focus();
+        $(".clickable-row").click(function() {
+          window.document.location = $(this).data("url");});
       }).call(this);
   /! Font Awesome by Dave Gandy - http://fontawesome.io

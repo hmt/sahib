@@ -39,18 +39,37 @@ end
 class SchuelerPresenter
   def initialize(s)
     @s = s
+    @yaml = YAML.load_file('./config/strings.yml')
   end
 
   def klasse
     @s.first.Klasse
   end
 
+  def bildungsgang
+    @yaml[@s.first.ASDSchulform]['Schulform'] rescue "Bildungsgang '#{@s.first.ASDSchulform}' in config/strings.yml anlegen"
+  end
+
   def anzahl
     @s.count
   end
 
-  def schueler_details
-    @s.map{ |s| {:name => s.Name, :vorname => s.Vorname, :adresse => "#{s.Strasse}, #{s.PLZ} #{s.OrtAbk}", :telefon => s.Telefon}}
+  def schueler_details(schueler)
+    schueler.map{ |s| {:name => s.name,
+                 :vorname => s.vorname,
+                 :adresse => "#{s.strasse}, #{s.plz} #{s.ort_abk}",
+                 :telefon => s.telefon,
+                 :geburtsdatum => s.geburtsdatum.strftime("%d.%m.%Y"),
+                 :volljaehrig => s.volljaehrig?,
+                 :id => s.id}}
+  end
+
+  def aktive_schueler
+    @s.where(:Status => 2, :Geloescht => "-", :Gesperrt => "-")
+  end
+
+  def inaktive_schueler
+    @s.exclude(:Status => 2)
   end
 end
 
@@ -134,19 +153,19 @@ end
 
 get '/schueler/:id' do
   schueler = Schueler[params[:id]]
-  slim :student, :locals => { :s => schueler, :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
+  abschnitte = AbschnittePresenter.new(schueler)
+  slim :student, :locals => { :s => schueler, :abschnitte => abschnitte, :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
 end
 
 get '/klasse/:name' do
-  halt 404, "noch nicht fertig"
-  schueler = Schueler.where(:Klasse => params[:name]).all
-  slim :klassen, :locals => {:schueler => schueler, :title => "Übersicht #{params[:name]}"}
+  schueler = Schueler.where(:Klasse => params[:name])
+  slim :klassen, :locals => {:s => schueler, :title => "Übersicht #{params[:name]}"}
 end
 
 get '/klasse/:name/:jahrgang' do
-  halt 404, "noch nicht fertig"
   schueler = Schueler.where(:Klasse => params[:name], :AktSchuljahr => params[:jahrgang])
-  slim :klasse, :locals => {:schueler => schueler, :title => params[:name]}
+  klasse = SchuelerPresenter.new(schueler)
+  slim :klasse, :locals => {:k => klasse, :s => schueler, :title => params[:name]}
 end
 
 get '/:doc/:id/:jahr/:abschnitt' do

@@ -1,0 +1,43 @@
+.row
+  .col-md-12
+    h1 =k.klasse
+    h2 =k.bildungsgang
+  .col-md-10
+    h3 Aktive Schüler
+    table.table.table-condensed
+      tr
+        th
+          th Vorname
+        th Name
+        th Adresse
+        th Telefon
+        th Geburtsdatum
+      -k.schueler_details(k.aktive_schueler).each_with_index do |s,i|
+        tr.clickable-row data-url="/schueler/#{s[:id]}"
+          td class=(s[:volljaehrig] ? "success" : "danger")
+            =i+1
+          td =s[:vorname]
+          td =s[:name]
+          td =s[:adresse]
+          td =s[:telefon]
+          td class=(s[:volljaehrig] ? "success" : "danger")
+            =s[:geburtsdatum]
+
+    h3 Inktive Schüler
+    table.table.table-condensed
+      tr
+        th
+        th Vorname
+        th Name
+        th Adresse
+        th Telefon
+        th Geburtsdatum
+      -k.schueler_details(k.inaktive_schueler).each_with_index do |s,i|
+        tr.clickable-row data-url="/schueler/#{s[:id]}"
+          td =i+1
+          td =s[:vorname]
+          td =s[:name]
+          td =s[:adresse]
+          td =s[:telefon]
+          td class=(s[:volljaehrig] ? "success" : "danger")
+            =s[:geburtsdatum]
