@@ -1,38 +1,11 @@
 .page {
-  position: relative;
   // 296 für Chrome, andere sind mit 197 ok
   width: 210mm;
   height: 296mm;
-  padding: 10mm 25mm 10mm 25mm;
-  background-color: #ffeaea;
-  border: 1px solid black;
-  -webkit-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
-  -moz-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
-  box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
-  margin-bottom: 10px;
-  -webkit-print-color-adjust: exact;
-}
-.subpage {
-  font: 10pt "Tex Gyre Heros" !important;
-  background-color: white;
-  position: relative;
-  min-height: 100%;
 }
 @media print {
   @page {
     size: A4 portrait;
-  }
-  .container {
-    padding: 0;
-    margin: 0;
-  }
-  .page {
-    page-break-after: always;
-    border: none;
-    margin-bottom: 0px;
-    -webkit-box-shadow:initial;
-    -moz-box-shadow:initial;
-    box-shadow: initial;
   }
 }
 
