@@ -18,7 +18,7 @@ link href="/css/print_a4.css" rel="stylesheet" media="all"
             b #{s.anrede} #{s.vorname.strip} #{s.name.strip}
           |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort.strip}
           br
-            |besuchte das 1. Halbjahr des Schuljahres #{s.schuljahr} in der Klasse #{s.klasse}
+            |besuchte das #{hj.abschnitt}. Halbjahr des Schuljahres #{hj.schuljahr} in der Klasse #{hj.klasse}
           .voffset-20
             |Leistungen laut Konferenzbeschluss vom #{(hj.konferenzdatum).strftime("%d.%m.%Y")}:
       .row
