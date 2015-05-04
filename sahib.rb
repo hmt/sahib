@@ -14,8 +14,10 @@ yaml = YAML.load_file('./config/strings.yml')
 
 configure do
   Slim::Engine.set_options pretty: true
+  file = "wkhtmltopdf"
+  here = IO.popen("whereis #{file}").readline.chomp.gsub(file+": ", "")
   PDFKit.configure do |config|
-    config.wkhtmltopdf = '/usr/bin/wkhtmltopdf'
+    config.wkhtmltopdf = here
     config.default_options = {
       :margin_bottom => '0mm',
       :margin_top => '0mm',
@@ -78,7 +80,7 @@ get '/suche/klassen/autocomplete.json' do
     ret = klassen.map do |klasse,schueler|
       if klasse.downcase == params[:pattern].downcase || klassen.count == 1
         jahrgaenge = schueler.group_by{ |s| s.AktSchuljahr }
-        jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count}), #{jahrgang}", :link => "/klasse/#{klasse}/#{jahrgang}"} }
+        jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count{|s| s.Status == 2}}), #{jahrgang}", :link => "/klasse/#{klasse}/#{jahrgang}"} }
       else
         {:value => "#{klasse} (#{schueler.count})", :link => "/klasse/#{klasse}"}
       end
@@ -104,7 +106,7 @@ get '/klasse/:name/:jahrgang' do
   slim :klasse, :locals => {:k => klasse, :s => schueler, :title => params[:name]}
 end
 
-get '/:doc/:id/:jahr/:abschnitt' do
+get '/dokument/:doc/:id/:jahr/:abschnitt' do
   schueler = Schueler.where(:ID => params[:id])
   if schueler.count == 0
     schueler = Schueler.where(:Status => 2, :Klasse => params[:id])

@@ -4,18 +4,23 @@
       =k.klasse
       small  #{k.bildungsgang}
     small =k.klassenlehrer
-  .col-xs-4
+  .col-xs-6
     h1 #{k.akt_jahr}, #{k.akt_abschnitt}
     .btn-group.hidden-print
-      a.btn.btn-primary.btn-lg type="button" href="/hjz/#{k.klasse}/#{k.akt_jahr}/#{k.akt_abschnitt}"
+      a.btn.btn-primary.btn-lg type="button" href="/dokument/hjz/#{k.klasse}/#{k.akt_jahr}/#{k.akt_abschnitt}"
         | Zeugnisse drucken
       button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
         span.caret
       ul.dropdown-menu role="menu"
-        -k.abschnitte.reverse[1..-1].each do |a|
+        -k.abschnitte.each do |a|
+          -next if a[:jahr] == k.akt_jahr && a[:abschnitt] == k.akt_abschnitt
           li
-            a href="/hjz/#{k.klasse}/#{a[:jahr]}/#{a[:abschnitt]}"
-              ="#{a[:schuljahr]}, #{a[:abschnitt]}"
+            a href="/dokument/hjz/#{k.klasse}/#{a[:jahr]}/#{a[:abschnitt]}"
+              ="#{a[:abschnitt]}. Halbjahr #{a[:schuljahr]}"
+        li.divider
+        li
+          a href="/dokument/asz_2014/#{k.klasse}/#{k.akt_jahr}/#{k.akt_abschnitt}"
+            |Abschlusszeugnis
 .row
   .col-xs-10
     h3 Aktive Schüler

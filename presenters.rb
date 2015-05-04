@@ -60,6 +60,10 @@ module Presenters
       @abschnitte = s.abschnitte_dataset
     end
 
+    def all
+      @abschnitte.all
+    end
+
     def jahr_und_abschnitt
       @abschnitte.map{ |a| {:jahr => a.Jahr, :abschnitt => a.Abschnitt, :schuljahr => a.schuljahr} }
     end

@@ -1,18 +1,40 @@
 .row
-  .col-md-12
+  .col-xs-6
     h1 #{s.Vorname} #{s.Name} #{s.Geschlecht == 3 ? "♂" : "♀"}
     h3
       a href="/klasse/#{s.Klasse}/#{s.AktSchuljahr}"
         =s.klasse
       |, #{s.berufsbezeichnung_mw}
-  .col-md-6
+  .col-xs-6
+    h1 #{s.akt_schuljahr}, #{s.akt_abschnitt}
+    .btn-group.hidden-print
+      a.btn.btn-primary.btn-lg type="button" href="/dokument/hjz/#{s.id}/#{s.akt_schuljahr}/#{s.akt_abschnitt}"
+        | Zeugnisse drucken
+      button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+        span.caret
+      ul.dropdown-menu role="menu"
+        -abschnitte.all.each do |a|
+          -next if a.jahr == s.akt_schuljahr && a.abschnitt == s.akt_abschnitt
+          li
+            a href="/dokument/hjz/#{s.id}/#{a.jahr}/#{a.abschnitt}"
+              ="#{a.abschnitt}. Halbjahr #{a.schuljahr}"
+        li.divider
+        li
+          a href="/dokument/asz_2014/#{s.id}/#{s.akt_schuljahr}/#{s.akt_abschnitt}"
+            |Abschlusszeugnis
+        li
+          a href="/dokument/agz/"
+            |Abgangszeugnis
+.row
+  .col-xs-6
     -abschnitte = AbschnittePresenter.new(s)
+    .voffset-20
     table.table.table-condensed
       tr
         th Zeugnis/Abschnitt
         -abschnitte.jahr_und_abschnitt.each do |a|
           th
-            a.btn.btn-default.btn-xs href="/hjz/#{s.ID}/#{a[:jahr]}/#{a[:abschnitt]}" #{a[:schuljahr]}, #{a[:abschnitt]}
+            a.btn.btn-default.btn-xs href="/dokument/hjz/#{s.ID}/#{a[:jahr]}/#{a[:abschnitt]}" #{a[:schuljahr]}, #{a[:abschnitt]}
       -abschnitte.noten.each_pair do |k,v|
         tr
           td #{k}
