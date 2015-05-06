@@ -7,11 +7,13 @@ require 'envyable'
 Envyable.load('./config/env.yml', ENV['RACK_ENV'])
 require 'schild'
 include Schild
-require "#{File.dirname(__FILE__)}/presenters"
+require "#{File.dirname(__FILE__)}/lib/presenters"
 include Presenters
 yaml = YAML.load_file('./config/strings.yml')
 
 configure do
+  set :views, ['views', 'dokumente']
+
   Slim::Engine.set_options pretty: true
 
   file = "wkhtmltopdf"
@@ -37,6 +39,10 @@ helpers do
 
   def flash
     @flash = session.delete(:flash)
+  end
+
+  def find_template(views, name, engine, &block)
+    views.each { |v| super(v, name, engine, &block) }
   end
 end
 
