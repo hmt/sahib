@@ -4,8 +4,7 @@ require 'sass'
 require 'json'
 require 'envyable'
 # environment verwenden
-#Envyable.load('./config/env.yml', 'testing')
-Envyable.load('./config/env.yml', 'development')
+Envyable.load('./config/env.yml', ENV['RACK_ENV'])
 require 'schild'
 include Schild
 require "#{File.dirname(__FILE__)}/presenters"
@@ -14,6 +13,7 @@ yaml = YAML.load_file('./config/strings.yml')
 
 configure do
   Slim::Engine.set_options pretty: true
+
   file = "wkhtmltopdf"
   here = IO.popen("whereis #{file}").readline.chomp.gsub(file+": ", "")
   PDFKit.configure do |config|
@@ -75,7 +75,7 @@ get '/suche/klassen/autocomplete.json' do
   klassen = Schueler.where(Sequel.ilike(:Klasse, "#{params[:pattern]}%")).all
   klassen = klassen.group_by{ |k| k.Klasse }
   if klassen.empty?
-    404
+    halt 404
   else
     ret = klassen.map do |klasse,schueler|
       if klasse.downcase == params[:pattern].downcase || klassen.count == 1
