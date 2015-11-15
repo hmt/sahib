@@ -1,0 +1,11 @@
+.page {
+  // 296 für Chrome, andere sind mit 197 ok
+  width: 296mm;
+  height: 209mm;
+}
+@media print {
+  @page {
+    size: A4 landscape;
+  }
+}
+

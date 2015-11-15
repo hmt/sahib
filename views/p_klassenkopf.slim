@@ -1,0 +1,29 @@
+.row
+  .col-xs-6
+    h1
+      a href="/klasse/#{k.s.klasse}/#{jahr}"
+        '#{k.s.klasse}
+      small =k.s.halbjahr(jahr, abschnitt).string 'Schulform'
+    small =k.s.halbjahr(jahr, abschnitt).klassenlehrer.nachname rescue "Klassenlehrer nicht angegeben"
+  .col-xs-6
+    h1 #{jahr}, #{abschnitt}
+    .hidden-print
+      .btn-group
+        button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+          'Dokument erzeugen
+          span.caret
+        ul.dropdown-menu role="menu"
+          -dokumente.each do |d|
+            -next if abschnitt == d.get('Ignoriere-Abschnitt')
+            li
+              a href="/dokumente/#{d.name}/#{jahr}/#{abschnitt}/#{k.aktive_schueler.map{|i|i.id}.join(',')}"
+                =d.get 'Name'
+      .btn-group
+        button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+          'Abschnitt
+          span.caret
+        ul.dropdown-menu role="menu"
+          -k.s.abschnitte.each do |a|
+            li
+              a href="/klasse/#{k.s.klasse}/#{a.jahr}/#{a.abschnitt}"
+                ="#{a.abschnitt}. Halbjahr #{a.schuljahr}"

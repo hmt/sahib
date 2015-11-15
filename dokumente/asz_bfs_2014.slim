@@ -1,0 +1,78 @@
+link href="/css/print.css" rel="stylesheet" media="all"
+link href="/css/print_a3.css" rel="stylesheet" media="all"
+-schueler.each_with_index do |s,i|
+  -next if s.bk_abschluss.nil?
+  -hj=s.halbjahr(jahr, abschnitt)
+  .page
+    img src="/images/deckblatt_komp.svg" data-failover="/images/#{Dokument.default "Deckblatt"}"
+  .page
+    .seitenlogo
+      img src="/images/#{doc.get("logo_seite")}" height="160px" data-failover="/images/#{Dokument.default "logo_seite"}"
+    .subpage.font-size-11
+      .row
+        .col-xs-12
+          img src="/images/#{doc.get("logo_top")}" width="100%" data-failover="/images/#{Dokument.default "logo_top"}"
+          hr.hr-rot
+      .row
+        .col-xs-6
+          .col-xs-11
+            ==partial :p_zeugnis_kopf, :s => s, :hj => hj
+            ==partial :p_asz_zeugnis_noten, :s => s, :hj => hj
+            ==partial :p_zeugnis_bemerkungen, :s => s, :hj => hj
+        .col-xs-6
+          .col-xs-11.col-xs-offset-1
+            .row
+              .col-xs-12
+                .voffset-1
+                table.col-xs-12.table-noten
+                  -hj.noten.select{|f| f.fach.fach_krz.start_with? "AS"}.each do |as|
+                    tr
+                      td width="22%" =as.fach.zeugnisbez
+                      td.td-padding-extra =as.lernentw
+                      td.td-fach-note width="20%"
+                        span =s.bk_abschluss_leistungen.find{|f| f.fach_id == as.fach_id}.note(:note_abschluss)
+            .row
+              .col-xs-12
+                .voffset-2
+                  '#{s.anrede} #{s.vorname} #{s.name} hat die Berufsabschlussprüfung bestanden
+                  |und ist berechtigt, die Berufsbezeichnung
+                  h3.text-center
+                    =hj.berufsbezeichnung_mw
+                  |zu führen.
+                .voffset-1
+                  |Der Abschluss ist im Deutschen und Europäischen Qualifikationsrahmen dem Niveau #{s.fachklasse.dqr_niveau} zugeordnet.
+            .voffset-3.text-center
+              |#{s.anrede} #{s.vorname} #{s.name} hat den
+            .voffset-1.text-center
+              b mittleren Schulabschluss (Fachoberschulreife)
+              -if s.entlassart == "5G"
+                br/
+                b mit Berechtigung zum Besuch der gymnasialen Oberstufe
+            .voffset-1.text-center
+              |erworben
+            .voffset-4
+              ==partial :p_zeugnis_unterschrift_pa, :hj => hj
+
+        / liegt unterhalb von .subpage, da .page padding hat und der footer oberhalb platziert wird.
+      .pull-bottom.klein
+        .row
+          .col-xs-12
+            .schulnummer.grau Schulnummer: #{Schule.schulnummer}
+            hr.hr-grau
+            .row.grau
+              .col-xs-6
+                .col-xs-11
+                  .grau
+                    //linebreak?
+                    =partial doc.textbaustein 'Notenstufen'
+                    p
+                    sup.grau 1
+                    =partial doc.textbaustein 'Fremdsprachenniveau'
+              .col-xs-6
+                .col-xs-11.col-xs-offset-1
+                  .grau
+                    'Dem Zeugnis liegen zugrunde:
+                    =partial doc.textbaustein 'APO'
+                    p
+                    'Rechtsbehelfsbelehrung:
+                    =partial doc.textbaustein 'Rechtsbehelfsbelehrung'

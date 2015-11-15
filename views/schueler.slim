@@ -1,50 +1,86 @@
+==partial :p_schuelerkopf, :s => s, :hj => s.halbjahr(jahr, abschnitt) || s.abschnitte.first, :dokumente => dokumente
 .row
-  .col-xs-6
-    h1 #{s.Vorname} #{s.Name} #{s.Geschlecht == 3 ? "♂" : "♀"}
-    h3
-      a href="/klasse/#{s.Klasse}/#{s.AktSchuljahr}"
-        =s.klasse
-      |, #{s.berufsbezeichnung_mw}
-  .col-xs-6
-    h1 #{s.akt_schuljahr}, #{s.akt_abschnitt}
-    .btn-group.hidden-print
-      a.btn.btn-primary.btn-lg type="button" href="/dokument/hjz/#{s.id}/#{s.akt_schuljahr}/#{s.akt_abschnitt}"
-        | Zeugnisse drucken
-      button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
-        span.caret
-      ul.dropdown-menu role="menu"
-        -abschnitte.all.each do |a|
-          -next if a.jahr == s.akt_schuljahr && a.abschnitt == s.akt_abschnitt
-          li
-            a href="/dokument/hjz/#{s.id}/#{a.jahr}/#{a.abschnitt}"
-              ="#{a.abschnitt}. Halbjahr #{a.schuljahr}"
-        li.divider
-        li
-          a href="/dokument/asz_2014/#{s.id}/#{s.akt_schuljahr}/#{s.akt_abschnitt}"
-            |Abschlusszeugnis
-        li
-          a href="/dokument/agz/"
-            |Abgangszeugnis
-.row
-  .col-xs-6
-    -abschnitte = AbschnittePresenter.new(s)
-    .voffset-20
-    table.table.table-condensed
-      tr
-        th Zeugnis/Abschnitt
-        -abschnitte.jahr_und_abschnitt.each do |a|
-          th
-            a.btn.btn-default.btn-xs href="/dokument/hjz/#{s.ID}/#{a[:jahr]}/#{a[:abschnitt]}" #{a[:schuljahr]}, #{a[:abschnitt]}
-      -abschnitte.noten.each_pair do |k,v|
-        tr
-          td #{k}
-          -v.each do |n|
-            td.td-center #{n}
-      tr
-        th Fehlstunden
-        -abschnitte.fehlstunden.each do |fstd|
-          td.td-center #{fstd}
-      tr
-        th unentschudigt
-        -abschnitte.fehlstunden_ue.each do |fstd_ue|
-          td.td-center #{fstd_ue}
+  .col-xs-12
+    .tab-content
+      ul.nav.nav-tabs role="tablist"
+        li.active role="presentation"
+          a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab"  Schüler
+        //li role="presentation"
+          a aria-controls="check" data-toggle="tab" href="#check" role="tab"  Check
+        li role="presentation"
+          a aria-controls="debug" data-toggle="tab" href="#debug" role="tab" Datenbankfelder
+
+      #schueler.tab-pane.active role="tabpanel"
+        .row
+          .col-xs-6
+            .voffset-20
+            table.table.table-condensed
+              tr
+                th Abschnitt
+                -s.abschnitte.each do |a|
+                  th.td-center class=('info' if a.jahr == jahr && a.abschnitt == abschnitt)
+                    a.btn.btn-default.btn-xs href="/schueler/#{s.id}/#{a.jahr}/#{a.abschnitt}" #{a.schuljahr}, #{a.abschnitt}
+              -s.noten_hash.each_pair do |k,v|
+                tr
+                  td #{k}
+                  -v.each do |n|
+                    td.td-center #{n}
+              tr
+                th Fehlstunden
+                -s.abschnitte.each do |a|
+                  td.td-center #{a.sum_fehl_std}
+              tr
+                th unentschudigt
+                -s.abschnitte.each do |a|
+                  td.td-center #{a.sum_fehl_std_u}
+          .col-xs-2
+            -if s.foto_vorhanden?
+              img src="/images/schueler/#{s.id}.jpg"
+          .col-xs-3
+            address
+              strong
+                =>s.vorname
+                =s.name
+              br/
+              =s.strasse
+              br/
+              =>s.plz
+              =s.ort_abk
+              br/
+              br/
+              =s.telefon
+              br/
+              =s.fax
+              br/
+              a href="mailto:#{s.e_mail}" =s.e_mail
+
+      #check.tab-pane role="tabpanel"
+      #debug.tab-pane role="tabpanel"
+        .row
+          .col-xs-4
+            dl.dl-horizontal
+              -s.columns.each do |c|
+                dt =c.to_s
+                dd =s[c].to_s
+          .col-xs-4
+            -s.abschnitte.each do |a|
+              dl.dl-horizontal
+                -a.columns.each do |c|
+                  dt =c.to_s
+                  dd =a[c].to_s
+javascript:
+  (function() {
+    $('#schueler a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+    $('#check a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+    $('#debug a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+  })
+

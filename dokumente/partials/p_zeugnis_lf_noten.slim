@@ -1,0 +1,36 @@
+.row style='font: 9pt "Tex Gyre Heros"'
+  .col-xs-12
+    table.col-xs-12.table-noten
+      -hj.faechergruppen.each do |gruppe|
+        -unless gruppe.empty?
+          tr
+            td.fachgruppe-margin
+              div style="font-size: 10pt"
+                b =hj.string('Fachgruppe', gruppe.first.fachgruppe_ID)
+            td
+          -lernbereich_1_ab = gruppe.index{ |f| f.fach.SortierungS2%10 == 1}
+          -lernbereich_2_ab = gruppe.index{ |f| f.fach.SortierungS2%10 == 2}
+          -lernbereich_3_ab = gruppe.index{ |f| f.fach.SortierungS2%10 == 3}
+          -gruppe.each_with_index do |fach,i|
+            -if i == lernbereich_1_ab
+              tr
+                td colspan="2"
+                  u =hj.string("Lernfeld_Lernbereich")
+            -if i == lernbereich_2_ab
+              tr
+                td colspan="2"
+                  u =hj.string("Lernfeld_Lernbereich_LF")
+            -if i == lernbereich_3_ab
+              tr
+                td colspan="2" &nbsp;
+            tr
+              td class=("lernfeld-lernbereich" if fach.fach.SortierungS2%10 >= 1 && fach.fach.SortierungS2%10 != 3) class=("fett" if fach.Lernentw)
+                =fach.fach.Zeugnisbez || fach.bezeichnung
+              /td=fach.fach.SortierungS2
+              td.td-fach-note
+                span class=("e-note" if fach.noten_krz.start_with? "E")
+                  =fach.note || "––––––"
+                  =>fach.lernentw if fach.fach.ist_sprache == "+"
+              -if fach.Lernentw && fach.fach.ist_sprache == "-"
+                tr
+                  td.fach-bezeichnung.padding-5 Thema: #{fach.Lernentw}

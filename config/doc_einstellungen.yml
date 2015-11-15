@@ -1,0 +1,112 @@
+---
+# Die Basiseinstellungen für Dokumente werden als root abgelegt, z.B. Logos etc
+#
+# Einzelne Dokumente:
+# 1. Zeile ist der Dateiname des Dokuments unter dokumente/
+# 2. Zeile ist der Name des Dokuments, wie er in der Dokumentenerstellungsansicht gezeigt wird
+# 3. Zeile sind die Gruppen, die über asd_schulform[1] ermittelt werden (APO-BK Anlagen)
+# außer dem Dateinamen sind die Reihenfolgen im Prinzip auch Banane
+# Format ist für den Druck, A4, A3 etc
+# Orientierung ist entweder portrait oder landscape - also hochkant oder quer im Format
+# Standard für Format und Orientierung sind A4 und portrait
+#
+default:
+  logo_top:
+    2013: logo_top_dummy.svg
+    2014: logo_top_dummy.svg
+  logo_seite: logo_seite_dummy.svg
+  Deckblatt: deckblatt_dummy.svg
+  Format: A4
+  Orientierung: portrait
+  Gruppen: []
+  Name: Dokument
+  Test: Default
+
+slb_ahr_2014:
+  logo_top: bk_logo_ohne_text.svg
+  logo_seite: traeger_logo.svg
+  Name: Schullaufbahnbescheinigung AHR
+  Gruppen: [D]
+asz_fos_2014:
+  logo_top: asz_logo_ohne_linie_breiter_text_breit.svg
+  logo_seite: traeger_logo.svg
+  Deckblatt: deckblatt_komp.svg
+  Name: Abschlusszeugnis FOS
+  Gruppen: [C]
+  Format: A3
+  Orientierung: landscape
+agz_mit_pruefung_2014:
+  logo_top: agz_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Abgangszeugnis mit Prüfungsnoten
+  Gruppen: [B,E]
+agz_2014:
+  logo_top: agz_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Abgangszeugnis
+hjz_2015:
+  logo_top: zeugnis_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Halbjahreszeugnis 2015
+  Ignoriere-Abschnitt: 2
+brief_2014:
+  logo_top: bk_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Briefpapier
+zert_betreuungskraft_b:
+  logo_top: bk_logo_ohne_text.svg
+  logo_seite: traeger_logo.svg
+  Name: Zertifikat Betreuungskraft
+  Gruppen: [B]
+jz_lf_2014:
+  logo_top: zeugnis_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Jahreszeugnis für Lernfeldgruppen
+  Gruppen: [E]
+  Ignoriere-Abschnitt: 1
+jz_2014:
+  logo_top: zeugnis_logo.svg
+  logo_seite: traeger_logo.svg
+  Name: Jahreszeugnis
+  Ignoriere-Abschnitt: 1
+asz_fs_jz_anlage_2014:
+  logo_top: bk_logo_ohne_text.svg
+  logo_seite: traeger_logo.svg
+  Name: Anlage zum Jahreszeugnis Übergang BP
+  Gruppen: [E]
+asz_fs_2014:
+  logo_top: zeugnis_logo.svg
+  logo_seite: traeger_logo.svg
+  Deckblatt: deckblatt_komp.svg
+  Name: Jahreszeugnis Übergang BP
+  Gruppen: [E]
+  Format: A3
+  Orientierung: landscape
+asz_fhr_fs_2014:
+  logo_top: bk_logo_ohne_text.svg
+  logo_seite: traeger_logo.svg
+  Name: Fachhochschulzeugnis FS
+  Gruppen: [E]
+asz_fs_pkb_2014:
+  logo_top: asz_logo_ohne_linie_breiter_text_breit.svg
+  logo_seite: traeger_logo.svg
+  Deckblatt: deckblatt_komp.svg
+  Name: Abschlusszeugnis FS (BP/Koll)
+  Gruppen: [E]
+  Format: A3
+  Orientierung: landscape
+apa_notenuebersicht:
+  logo_seite: traeger_logo.svg
+  Name: Notenübersicht APA
+  Orientierung: landscape
+asz_bfs_2014:
+  logo_top: asz_logo_ohne_linie_breiter_text_breit.svg
+  logo_seite: traeger_logo.svg
+  Deckblatt: deckblatt_komp.svg
+  Name: Abschlusszeugnis BFS
+  Gruppen: [B]
+  Format: A3
+  Orientierung: landscape
+klassenbilder:
+  logo_seite: traeger_logo.svg
+  Name: Schülerfotos als Übersicht

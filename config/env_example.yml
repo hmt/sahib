@@ -1,26 +1,30 @@
 # hier die Daten für den Datenbankzugriff eintragen
 # über sahib.rb kann man einstellen, welche DB verwendet wird
 # in der Standardeinstellung
+#
+# SLIMERJSLAUNCHER: Hier den Pfad für Firefox eintragen
+# SLIMER_SSL_PROFILE: ein Profil erstellen für Slimer, damit SSL geht.
+# Siehe: http://darrendev.blogspot.de/2013/10/slimerjs-getting-it-to-work-with-self.html
 
 # anschließend umebenennen in config/env.yml
 
 development:
   S_ADAPTER: mysql2
-  S_HOST: 192.168.178.55
+  S_HOST: localhost
   S_USER: schild
-  S_PASSWORD: schild_passwort
-  S_DB: schild_db
-  S_LOGO_TOP: zeugnis_logo.svg
-  S_LOGO_SEITE: seiten_logo.svg
+  S_PASSWORD: schild
+  S_DB: schild_test
+  SLIMERJSLAUNCHER: /usr/bin/firefox
+  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
 
 testing:
   S_ADAPTER: mysql2
   S_HOST: localhost
   S_USER: schild
   S_PASSWORD: schild
-  S_DB: schild-test
-  S_LOGO_TOP: zeugnis_logo.svg
-  S_LOGO_SEITE: seiten_logo.svg
+  S_DB: schild_test
+  SLIMERJSLAUNCHER: /usr/bin/firefox
+  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
 
 production:
   S_ADAPTER: mysql2
@@ -28,6 +32,5 @@ production:
   S_USER: schild_in_echt
   S_PASSWORD: geheimes_passwort
   S_DB: schild_echte_db
-  S_LOGO_TOP: zeugnis_logo.svg
-  S_LOGO_SEITE: seiten_logo.svg
-
+  SLIMERJSLAUNCHER: /usr/bin/firefox
+  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL

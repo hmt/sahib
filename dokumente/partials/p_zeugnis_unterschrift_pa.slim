@@ -1,0 +1,16 @@
+.row
+  .col-xs-6
+    |#{Schule.ort}, den #{hj.zeugnis_datum.strftime("%d.%m.%Y")}
+    .voffset-3
+.row.klein
+  .text-center Siegel
+  .col-xs-5
+    hr
+    .text-center
+      =>"#{Schule.first.schulleiter_vorname} #{Schule.first.schulleiter_name}"
+      |– Vorsitzender des allgemeinen Prüfungsausschusses
+  .col-xs-5.col-xs-offset-2
+    .text-center
+      hr
+      =>"#{Schule.first.schulleiter_vorname} #{Schule.first.schulleiter_name}"
+      ="– #{Schule.schulleiter_in}"

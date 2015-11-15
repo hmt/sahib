@@ -1,0 +1,91 @@
+link href="/css/print.css" rel="stylesheet" media="all"
+link href="/css/print_a4.css" rel="stylesheet" media="all"
+-schueler.each_with_index do |s,i|
+  -next if s.bk_abschluss.nil?
+  -hj=s.halbjahr(jahr, abschnitt)
+  .page
+    .seitenlogo
+      img src="/images/#{doc.get("logo_seite")}" height="160px" data-failover="/images/#{Dokument.default "logo_seite"}"
+    .subpage
+      .row
+        .col-xs-12
+          img src="/images/#{doc.get("logo_top")}" width="100%" data-failover="/images/#{Dokument.default "logo_top"}"
+          hr.hr-rot
+      .row
+        .col-xs-12
+          div style="font-size: 15pt; line-height: 1.5em"
+            =hj.string('Schulform')
+          div style="font-size: 12pt; line-height: 1.2em"
+            =hj.string('Bereich')
+            -if s.asd_schulform.start_with?("B")
+              br/
+              |Abschluss #{hj.berufsbezeichnung_mw}
+          .voffset-1
+          b #{s.anrede} #{s.vorname} #{s.name}
+          br /
+          |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort}
+          br /
+          -if s.asd_schulform.start_with? "E"
+            |besuchte im Schuljahr #{hj.schuljahr} die Klasse #{hj.klasse}
+          -else
+            |besuchte im #{hj.abschnitt}. Halbjahr des Schuljahres #{hj.schuljahr} die Klasse #{hj.klasse}
+          .voffset-1
+          |Leistungen laut Konferenzbeschluss vom #{(hj.konferenzdatum).strftime("%d.%m.%Y")}:
+      ==partial :p_zeugnis_noten, :s => s, :hj => hj
+      .row
+        .col-xs-12
+          hr
+          b Bemerkungen
+          br/
+          -if hj.ZeugnisBem || hj.noten.any?{ |n| n.noten_krz == "5" || n.noten_krz == "6" }
+            -if hj.ZeugnisBem
+              .klein ==(hj.zeugnis_bem).gsub("\r\n","<br/>")
+            -if hj.noten.any? { |n| n.noten_krz == "5" || n.noten_krz == "6" } && !s.asd_schulform.start_with?("E") && !s.abschluss_datum.include?(Time.now.year.to_s)
+              .klein
+                |Nicht ausreichende Leistungen gefährden den Abschluss.
+          .voffset-1
+          b
+            .text-center
+              |#{s.geschlecht == 3 ? "Der ":"Die "} Studierende hat laut Konferenzbeschluss vom #{(hj.konferenzdatum).strftime("%d.%m.%Y")}
+              br/
+              |die Berechtigung zum Übergang in das Berufspraktikum erworben.
+          .voffset-3
+      .pull-bottom
+        .row
+          .col-xs-12
+            |#{Schule.ort}, den #{hj.zeugnis_datum.strftime("%d.%m.%Y")}
+            .voffset-3
+          .col-xs-12
+            .klein
+              .col-xs-4
+                hr
+                .text-center
+                  =>"#{Schule.first.schulleiter_vorname} #{Schule.first.schulleiter_name}"
+                  ="– #{Schule.schulleiter_in}"
+              .col-xs-4
+                .text-center Siegel
+              .col-xs-4
+                hr
+                .text-center
+                  |#{hj.v_name_klassenlehrer} – #{hj.klassenlehrer_in}
+        .row.klein
+          .col-xs-12
+            .text-center.grau Schulnummer: #{Schule.schulnummer}
+            hr.hr-grau
+            .grau
+               =partial doc.textbaustein 'Notenstufen'
+  .page
+    .subpage
+      .pull-bottom.klein
+        .row
+          .col-xs-12
+            hr.hr-grau
+            .grau
+              b.grau Dem Zeugnis liegen zugrunde:
+              br/
+              =partial doc.textbaustein 'APO'
+              .voffset-1
+              b.grau  Rechtsbehelfsbelehrung:
+              br/
+              'Rechtsbehelfsbelehrung:
+              =partial doc.textbaustein 'Rechtsbehelfsbelehrung'

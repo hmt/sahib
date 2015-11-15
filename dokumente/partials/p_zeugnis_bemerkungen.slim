@@ -1,0 +1,11 @@
+.row
+  .col-xs-12
+    hr
+    /.voffset-2
+    b Bemerkungen
+    br/
+    -if !hj.zeugnis_bem.empty?
+      ==(hj.zeugnis_bem).gsub("\r\n","<br/>")
+    -else
+      |keine
+

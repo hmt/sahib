@@ -1,0 +1,27 @@
+---
+Textbausteine:
+  Rechtsbehelfsbelehrung: >
+    Gegen dieses Zeugnis kann innerhalb eines Monats nach Bekanntgabe des
+    Zeugnisses Widerspruch eingelegt werden. Der Widerspruch ist beim
+    #{{Schule.first.bezeichnung2}}, #{Schule.first.strasse},
+    #{Schule.first.plz}, #{Schule.first.ort}, schriftlich oder zur Niederschrift
+    zu erheben. Falls die Frist durch das Verschulden einer/eines
+    Bevollmächtigten versäumt wird, wird dies Verschulden der
+    Widerspruchsführerin/dem Widerspruchsführer zugerechnet.
+  APO: >
+    Die Verordnung über die Ausbildung und Prüfung in den Bildungsgängen des
+    Berufskollegs (Ausbildungs- und Prüfungsordnung Berufskolleg, APO-BK) vom
+    26. Mai 1999 (SGV. NRW. 223/BASS 13 – 33 Nr. 1.1).
+  FS-Vereinbarung: >
+    Die Vereinbarung über Fachschulen (Beschluss der Kultusministerkonferenz vom 07. November 2002 in der jeweils geltenden Fassung).
+  Notenstufen: >
+    Notenstufen gemäß § 49 SchulG:
+    1 = sehr gut, 2 = gut, 3 = befriedigend, 4 = ausreichend, 5 = mangelhaft,
+    6 = ungenügend
+  Fremdsprachenniveau: >
+    Der Unterricht in den modernen Fremdsprachen hat auf der nach dem Fach in
+    Klammern angegebenen Niveaustufe des „Europäischen Referenzrahmens für
+    Sprachen: Lernen, Lehren, Beurteilen“ stattgefunden. Sind zwei
+    Referenzniveaus ausgewiesen, ist das niedrigere in vollem Umfang, das höhere
+    in Anteilen erreicht. Bei mindestens ausreichenden Leistungen wird der
+    sprachliche Kompetenzerwerb auf diesem Niveau bescheinigt.

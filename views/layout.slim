@@ -3,38 +3,58 @@ html lang="en"
   head
     meta charset="utf-8"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title Sahib
-    /![if lt IE 9]
-      script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.js"
-      script src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"
-    link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="all" type="text/css"
-    link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"
+    title #{title ||= "Sahib"}
+    link rel="stylesheet" href="/assets/bootstrap/3.3.5/bootstrap.min.css"
     link href="/css/app.css" rel="stylesheet"
+    link href="/css/print.css" rel="stylesheet"
+    link href="/favicon.ico" rel="shortcut icon"
+    script src="/assets/js/js-libs.js"
   body
     .container
       .row.hidden-print
-        .col-xs-12
-          h3
-            | Klasse oder Nachname eingeben, um Schüler auszuwählen
-      .row.hidden-print
+        .voffset-1
         .col-xs-5
           form#search-form name="search" role="search"
-            .input-group
-              input.form-control.input-lg#searchinput placeholder=("Suchen …") type="text" /
-              span.input-group-btn
-                button.btn.btn-default.btn-lg Suchen
-          .voffset-20
-        -if request.path_info.start_with?("/dokument/")
-          .col-xs-offset-2.col-xs-4
-            a.btn.btn-success.btn-lg href="#{request.path_info}.pdf"
+            input.form-control.input-lg#searchinput placeholder=("Klasse oder Name eingeben …") type="text" /
+        -if request.path_info.start_with?("/dokumente/")
+          .col-xs-offset-1.col-xs-4
+            a.btn.btn-success.btn-lg href="#{request.url}/#{pdf_name}.pdf?pdf_format=#{doc.get "Format"}&pdf_orientierung=#{doc.get "Orientierung"}"
               |PDF erzeugen
-
+      .row.hidden-print
+        .modal.fade#fehler-modal
+          .modal-dialog
+            .modal-content
+              .modal-header
+                button.close aria-label="Close" data-dismiss="modal" type="button"
+                  span aria-hidden="true"  &times;
+                h4.modal-title Warnung
+              .modal-body#fehler-modal-body
+                dl.dl-horizontal#fehler-modal-body-name
+              .modal-footer
+                button.btn.btn-default data-dismiss="modal" type="button"  OK
+        .voffset-1
       ==yield
-    script src="http://cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"
-    script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"
-    script src="http://cdn.jsdelivr.net/typeahead.js/0.10.5/typeahead.bundle.min.js"
     javascript:
       (function() {
+        var status = function(s,j) {
+          var color;
+          var text = "✓";
+          switch (s) {
+            case 2:
+              color = "success";
+              break;
+            case 8:
+              color = "warning";
+              break;
+            case 9:
+              color = "danger";
+              text = j;
+              break;
+            default:
+              color = "info";
+          }
+          return '<span class=\"label label-' + color + '\">' + text + '</span>'
+        };
         var schueler = new Bloodhound({
           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
           queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -57,10 +77,33 @@ html lang="en"
         },
         { name: 'name',
           displayKey: 'value',
-          source: schueler.ttAdapter()
+          source: schueler.ttAdapter(),
+          templates: {
+            suggestion: function (data) {
+              return '<p>' + data.value + ' ' + status(data.status, data.jahr) + '</p>';
+              }
+          }
         }).on("typeahead:selected typeahead:autocompleted", function(e, datum) { window.location.href = datum.link; });
         $("#searchinput").focus();
         $(".clickable-row").click(function() {
           window.document.location = $(this).data("url");});
+        $('[data-toggle="tooltip"]').tooltip();
+        if (#{request.path_info.start_with?("/dokumente/")}) {
+          var warnungen = #{{Presenters::Warnung.flush.to_json}}
+          if (Object.keys(warnungen).length > 0) {
+            for (var schueler in warnungen) {
+              $("#fehler-modal-body-name").append("<dt>"+schueler+"</dt>")
+              for (var meldung of warnungen[schueler]) {
+                $("#fehler-modal-body-name").append("<dd>"+meldung+"</dd>")
+              }
+            }
+            $('#fehler-modal').modal();
+          }
+        }
+        $('img[data-failover]').error(function(){
+          var failover = $(this).data('failover');
+          if (this.src != failover){
+            this.src = failover;
+          }
+        });
       }).call(this);
-  /! Font Awesome by Dave Gandy - http://fontawesome.io

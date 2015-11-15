@@ -2,34 +2,22 @@ require 'sinatra'
 require 'slim'
 require 'sass'
 require 'json'
-require 'envyable'
-# environment verwenden
-Envyable.load('./config/env.yml', ENV['RACK_ENV'])
 require 'schild'
-include Schild
+include SchildErweitert
 require "#{File.dirname(__FILE__)}/lib/presenters"
 include Presenters
-yaml = YAML.load_file('./config/strings.yml')
+require "#{File.dirname(__FILE__)}/lib/dokumente"
 
 configure do
-  set :views, ['views', 'dokumente']
-
+  puts "Sahib unter schild v#{Schild::VERSION}"
+  set :dokumente, DokumentenSammlung.new
+  set :views, ['views', 'dokumente', 'dokumente/partials']
   Slim::Engine.set_options pretty: true
+end
 
-  file = "wkhtmltopdf"
-  here = IO.popen("whereis #{file}").readline.chomp.gsub(file+": ", "")
-  PDFKit.configure do |config|
-    config.wkhtmltopdf = here
-    config.default_options = {
-      :margin_bottom => '0mm',
-      :margin_top => '0mm',
-      :margin_left => '0mm',
-      :margin_right => '0mm',
-      :page_size => 'A4',
-      :orientation => 'Portrait',
-      :print_media_type => true
-    }
-  end
+configure :testing do
+  set :raise_errors, true
+  set :show_exceptions, false
 end
 
 helpers do
@@ -37,17 +25,20 @@ helpers do
     slim template, :layout => false, :locals => locals
   end
 
-  def flash
-    @flash = session.delete(:flash)
-  end
-
   def find_template(views, name, engine, &block)
     views.each { |v| super(v, name, engine, &block) }
   end
+
+  def user_pass
+    user = Nutzer.where(:US_LoginName => request.env["REMOTE_USER"]).first
+    {:u => user.login,
+     :p => user.crypt(user.password)}
+  end
 end
 
-not_found do
-  'Seite nicht gefunden'
+use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
+  nutzer = Nutzer.where(:US_LoginName => username).first
+  nutzer && nutzer.password?(password)
 end
 
 error do
@@ -56,9 +47,6 @@ end
 
 # sass style sheet generation
 get '/css/:file.css' do
-  halt 404 unless File.exist?("views/#{params[:file]}.scss")
-  time = File.stat("views/#{params[:file]}.scss").ctime
-  last_modified(time)
   scss params[:file].intern
 end
 
@@ -66,63 +54,102 @@ get '/' do
   slim :home
 end
 
+get '/*.pdf' do
+  file = Tempfile.new(['id_',  '.pdf'])
+  # Damit slimer.js funktioniert, muss SLIMER_SSL_PROFILE (bei selbstsignierten Zertifikaten) und
+  # SLIMERJSLAUNCHER gesetzt werden. Ersteres auf ein Profil, das hier beschrieben wird: http://darrendev.blogspot.de/2013/10/slimerjs-getting-it-to-work-with-self.html
+  # und letzteres auf die ausführbare firefox binary (meist /usr/bin/firefox).
+  if File.exist?(ENV["SLIMER_SSL_PROFILE"])
+    profil = "-profile #{ENV['SLIMER_SSL_PROFILE']}"
+  end
+  puts cmd = `xvfb-run -a -e /dev/stdout slimerjs --debug=error #{profil} lib/pdf.js #{request.url.partition(".pdf")[0]} #{file.path} #{params[:pdf_format]} #{params[:pdf_orientierung]} #{user_pass[:u]} #{user_pass[:p] || ""}`
+
+  send_file file.path, :type => :pdf
+end
+
 get '/suche/schueler/autocomplete.json' do
   content_type :json
-  schueler = Schueler.where(Sequel.ilike(:Name, "#{params[:pattern]}%")).limit(30)
+  schueler = Schueler.where("Name LIKE :name OR Vorname LIKE :name", :name => "#{params[:pattern]}%").limit(30)
   if schueler.empty?
     halt 404
   else
-    schueler = schueler.map{ |s| { :value => "#{s.Name}, #{s.Vorname} (#{s.Klasse})", :link => "/schueler/#{s.ID}"} }.to_json
+    schueler = schueler.map{ |s| { :value => "#{s.name}, #{s.vorname} (#{s.klasse})", :status => s.status, :jahr => s.akt_schuljahr, :link => "/schueler/#{s.id}"} }.to_json
   end
 end
 
 get '/suche/klassen/autocomplete.json' do
   content_type :json
   klassen = Schueler.where(Sequel.ilike(:Klasse, "#{params[:pattern]}%")).all
-  klassen = klassen.group_by{ |k| k.Klasse }
+  klassen = klassen.group_by{ |k| k.klasse }
   if klassen.empty?
     halt 404
   else
     ret = klassen.map do |klasse,schueler|
       if klasse.downcase == params[:pattern].downcase || klassen.count == 1
-        jahrgaenge = schueler.group_by{ |s| s.AktSchuljahr }
-        jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count{|s| s.Status == 2}}), #{jahrgang}", :link => "/klasse/#{klasse}/#{jahrgang}"} }
+        jahrgaenge = schueler.group_by{ |s| s.akt_schuljahr }
+        jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count{|s| s.status == 2}}), #{jahrgang}", :link => "/klasse/#{klasse}/#{jahrgang}"} }.reverse
       else
-        {:value => "#{klasse} (#{schueler.count})", :link => "/klasse/#{klasse}"}
+        {:value => "#{klasse} (#{schueler.count{|s| s.status == 2}})", :link => "/klasse/#{klasse}/#{schueler.max_by{ |s| s.akt_schuljahr }.akt_schuljahr}"}
       end
     end
     ret.flatten.to_json
   end
 end
 
-get '/schueler/:id' do
-  schueler = Schueler[params[:id]]
-  abschnitte = AbschnittePresenter.new(schueler)
-  slim :schueler, :locals => { :s => schueler, :abschnitte => abschnitte, :title => "#{schueler.Vorname} #{schueler.Name}, #{schueler.Klasse}" }
-end
-
-get '/klasse/:name' do
-  schueler = Schueler.where(:Klasse => params[:name])
-  slim :klassen, :locals => {:s => schueler, :title => "Übersicht #{params[:name]}"}
+get '/schueler/:id/?:jahr?/?:abschnitt?' do
+  schueler = SchuelerPresenter.new(Schueler[params[:id].to_i])
+  jahr = params[:jahr] ? params[:jahr].to_i : schueler.akt_schuljahr
+  abschnitt = params[:abschnitt] ? params[:abschnitt].to_i : schueler.akt_abschnitt
+  slim :schueler, :locals => { :s => schueler,
+                               :jahr => jahr,
+                               :abschnitt => abschnitt,
+                               :dokumente => settings.dokumente.select{|d| d.verfuegbar(schueler.asd_schulform[0])},
+                               :title => "#{schueler.vorname} #{schueler.name}, #{schueler.klasse}" }
 end
 
 get '/klasse/:name/:jahrgang' do
-  schueler = Schueler.where(:Klasse => params[:name], :AktSchuljahr => params[:jahrgang])
-  klasse = SchuelerPresenter.new(schueler)
-  slim :klasse, :locals => {:k => klasse, :s => schueler, :title => params[:name]}
+  schueler = Schueler.where(:Klasse => params[:name], :AktSchuljahr => params[:jahrgang].to_i)
+  halt 404, "Keine Schüler gefunden" if schueler.count == 0
+  klasse = KlassenPresenter.new(schueler)
+  slim :klasse, :locals => {:klasse => klasse,
+                            :dokumente => settings.dokumente.select{|d| d.verfuegbar(schueler.first.asd_schulform[0])},
+                            :title => "#{params[:name]}, #{params[:jahrgang]}"}
 end
 
-get '/dokument/:doc/:id/:jahr/:abschnitt' do
-  schueler = Schueler.where(:ID => params[:id])
-  if schueler.count == 0
-    schueler = Schueler.where(:Status => 2, :Klasse => params[:id])
+get '/klasse/:name/:jahr/:abschnitt' do
+  abschnitte = Abschnitt.where(:Klasse => params[:name], :Jahr => params[:jahr], :Abschnitt => params[:abschnitt])
+  schueler = Schueler.where(:ID => abschnitte.map{|s| s.Schueler_ID})
+  halt 404, "Keine Schüler gefunden" if schueler.count == 0
+  klasse = KlassenPresenter.new(schueler)
+  slim :klasse_abschnitt, :locals => {:klasse => klasse,
+                                      :jahr => params[:jahr].to_i,
+                                      :abschnitt => params[:abschnitt].to_i,
+                                      :dokumente => settings.dokumente.select{|d| d.verfuegbar(schueler.first.asd_schulform[0])},
+                                      :title => "#{params[:name]}, #{params[:abschnitt]}. Halbjahr #{params[:jahr]}"}
+end
+
+get '/dokumente/:doc/:jahr/:abschnitt/:id/?*' do
+  schueler = Schueler.where(:ID => Array(params[:id].split(","))) #kein [], weil hier mit Dataset gearbeitet wird!
+  halt 404, "Keine Schüler gefunden" if schueler.count == 0
+  klasse = KlassenPresenter.new(schueler)
+  doc = settings.dokumente.find{|d|d.name == params[:doc]}
+  slim doc.name.to_sym, :locals => { :schueler => klasse,
+                                     :jahr => params[:jahr].to_i,
+                                     :abschnitt => params[:abschnitt].to_i,
+                                     :doc => doc,
+                                     :pdf_name => "#{params[:jahr].to_i}_#{params[:abschnitt].to_i}_#{(klasse.count == 1) ? klasse.first.klasse+'_'+schueler.first.name : klasse.first.klasse.upcase}_#{doc.name}",
+                                     :pdf_format => doc.get("Format"),
+                                     :pdf_orientierung => doc.get("Orientierung"),
+                                     :title => "Dokumentenansicht" }
+end
+
+get '/images/schueler/:id.jpg' do
+  file = Tempfile.new(['id_',  '.jpg'])
+  foto = Schueler[params[:id].to_i].foto
+  unless foto.nil?
+    File.open(file, 'w'){|f| f.write foto}
+    send_file file.path, :type => :jpg, :disposition => :inline
+  else
+    halt 404
   end
-  klasse = SchuelerPresenter.new(schueler)
-  slim params[:doc].to_sym, :locals => { :yaml => yaml,
-                                         :schueler => schueler.all,
-                                         :jahr => params[:jahr],
-                                         :abschnitt => params[:abschnitt],
-                                         :k => klasse,
-                                         :title => "#{klasse.klasse}" }
 end
-

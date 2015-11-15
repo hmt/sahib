@@ -1,0 +1,58 @@
+link href="/css/print.css" rel="stylesheet" media="all"
+link href="/css/print_a4.css" rel="stylesheet" media="all"
+-schueler.each_with_index do |s,i|
+  -next if !s.daten_vollstaendig? [s._durchschnittsnote_fhr, s.bk_abschluss], "Es fehlen die notwendingen Daten zum Abschluss. Berechnung in Schild durchgeführt?"
+  -hj=s.halbjahr(jahr, abschnitt)
+  .page
+    .subpage.font-size-11
+      .row
+        .col-xs-12
+          img src="/images/#{doc.get('logo_top')}" width="100%" data-failover="/images/#{Dokument.default 'logo_top'}"
+          hr.hr-rot
+      .row
+        .col-xs-12
+          h3 Zeugnis der Fachhochschulreife
+          .voffset-2
+          |Der allgemeine Prüfungsausschuss stellte in seiner Abschlusskonferenz am #{(hj.konferenzdatum).strftime("%d.%m.%Y")} folgende Leistungen fest:
+          sup 1
+          .voffset-2
+            |Mathematisch-naturwissenschaftlicher-technischer Bereich:
+            =<s.bk_abschluss_leistungen.find{|n|n.fach_krz=='MFHR'}.note(:note_abschluss) rescue Warnung.add(s.name, 'MFHR nicht vorhanden.'); "Fehlt"
+          .voffset-2
+          b> ="#{s.anrede} #{s.vorname} #{s.name}"
+          |hat die Fachhochschulreifeprüfung im Bildungsgang #{hj.string('Schulform')}
+           in der #{hj.string('Bereich')} am #{(hj.konferenzdatum).strftime("%d.%m.%Y")} bestanden.
+          .voffset-1
+          |#{s.anrede} #{s.vorname} #{s.name} wird die
+          h4.text-center Fachhochschulreife
+          |zuerkannt. Entsprechend der Vereinbarung über den Erwerb einer Fachhochschulreife
+           in beruflichen Bildungsgängen – Beschluss der Kultusministerkonferenz vom
+           5. Juni 1998 in der jeweils geltenden Fassung – berechtigt dieses Zeugnis in allen
+           Ländern der Bundesrepublik Deutschland zum Studium an Fachhochschulen und
+           entsprechender Studiengänge an Universitäten.
+          .voffset-2
+          table.table-noten
+            tr
+              td Durschnittsnote:
+              td.td-fach-note
+                span =s.durchschnittsnote_fhr
+              td in&nbsp;Worten:
+              td.td-fach-note
+                span =s.durchschnittsnote_fhr_in_worten
+          .voffset-6
+          ==partial :p_zeugnis_unterschrift_pa, :hj => hj
+      .pull-bottom
+        .row
+          .col-xs-12
+            .klein
+              .schulnummer.grau Schulnummer: #{Schule.schulnummer}
+              hr.hr-grau
+              .grau
+                sup.grau 1
+                |Die Noten der Fächer
+                =<>hj.noten.select{|n| n.fach.GewichtungFHR && n.fach.GewichtungFHR > 0}.map{|n| n.fach.zeugnisbez}.join(", ")
+                |gehen in die Berechnung der Durchnittsnote für die Fachhochschulreife ein.
+                .voffset-1
+                |Rechtsbehelfsbelehrung:
+                //linebreaks?
+                =partial doc.textbaustein 'Rechtsbehelfsbelehrung'

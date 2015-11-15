@@ -1,1 +1,7 @@
-config/env.yml
+config/*.yml
+!config/strings.yml
+!config/textbausteine.yml
+!config/doc_einstellungen.yml
+.dropbox
+.sass-cache
+todo.txt

@@ -1,0 +1,21 @@
+link href="/css/print.css" rel="stylesheet" media="all"
+link href="/css/print_a4.css" rel="stylesheet" media="all"
+  .page
+    .seitenlogo
+      img src="/images/#{doc.get("logo_seite")}" height="160px" data-failover="/images/#{Dokument.default "logo_seite"}"
+    .subpage
+      .row
+        .col-xs-12
+          -s=schueler.first
+          b="Klasse #{s.klasse}, #{s.akt_halbjahr.klassenlehrer.nachname rescue "Klassenlehrer nicht angegeben"} –  erstellt am #{Time.new.strftime("%d.%m.%Y")}."
+          hr.hr-rot
+          table
+            -schueler.each_slice 5 do |ss|
+              tr
+                -ss.each do |s|
+                  td width="20%"
+                    img src="/images/schueler/#{s.id}.jpg" height="140px" alt="kein Bild vorhanden"
+              tr
+                -ss.each do |s|
+                  td width="20%"
+                    b ="#{s.vorname} #{s.name}"

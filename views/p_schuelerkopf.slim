@@ -1,0 +1,34 @@
+.row
+  .col-xs-6
+    h1
+      '#{s.Vorname} #{s.Name}
+      small
+        | #{s.Geschlecht == 3 ? "♂" : "♀"} #{s.alter}
+        ==< s.monate_bis_18 ? "<small>(#{s.monate_bis_18}m)</small>" : ""
+    a href="/klasse/#{s.klasse}/#{s.akt_schuljahr}"
+      |#{s.klasse}
+    -if hj
+      |, #{hj.berufsbezeichnung_mw.empty? ? hj.string('Schulform') : hj.berufsbezeichnung_mw}
+  -if hj
+    .col-xs-5
+      h1 #{hj.jahr}, #{hj.abschnitt}
+      .hidden-print
+        .btn-group
+          button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            'Dokument erzeugen
+            span.caret
+          ul.dropdown-menu role="menu"
+            -dokumente.each do |d|
+              -next if hj.abschnitt == d.get('Ignoriere-Abschnitt')
+              li
+                a href="/dokumente/#{d.name}/#{hj.jahr}/#{hj.abschnitt}/#{s.id}"
+                  =d.get 'Name'
+        .btn-group
+          button.btn.btn-primary.btn-lg.dropdown-toggle type="button" data-toggle="dropdown" aria-expanded="false"
+            'Abschnitt
+            span.caret
+          ul.dropdown-menu role="menu"
+            -s.abschnitte.each do |a|
+              li
+                a href="/schueler/#{s.id}/#{a.jahr}/#{a.abschnitt}"
+                  ="#{a.abschnitt}. Halbjahr #{a.schuljahr}"

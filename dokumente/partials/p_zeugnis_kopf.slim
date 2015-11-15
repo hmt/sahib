@@ -1,0 +1,13 @@
+.row
+  .col-xs-12
+    /.voffset-3
+    b #{s.anrede} #{s.vorname} #{s.name}
+    br /
+    |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort}
+    br /
+    'war vom #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} bis zur Aushändigung des Zeugnisses
+    |{s.schueler_studierende} #{hj.string('Zeugniskopf')}
+    .voffset-2
+    |Der allgemeine Prüfungsausschuss stellte in seiner Abschlusskonferenz am #{(hj.konferenzdatum).strftime("%-d.%-m.%Y")} fest:
+    .voffset-1
+    b Leistungen

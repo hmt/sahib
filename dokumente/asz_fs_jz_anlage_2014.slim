@@ -1,0 +1,50 @@
+link href="/css/print_a4.css" rel="stylesheet" media="all"
+-schueler.each_with_index do |s,i|
+  -hj=s.halbjahr(jahr, abschnitt)
+  .page
+    .seitenlogo
+      img src="/images/#{doc.get("logo_seite")}" height="160px" data-failover="/images/#{Dokument.default "logo_seite"}"
+    .subpage
+      .row
+        .col-xs-12
+          img src="/images/#{doc.get("logo_top")}" width="100%" data-failover="/images/#{Dokument.default "logo_top"}"
+          hr.hr-rot
+          h3 Anlage zum Jahreszeugnis
+          |Bescheinigung für Bewerbungszwecke
+          .voffset-3
+      .row
+        .col-xs-12
+          b #{s.anrede} #{s.vorname} #{s.name}
+          br /
+          |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort}
+          .voffset-2
+          |besucht seit dem #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} die Fachschule für Sozialwesen in der #{hj.string "Bereich"}
+           und hat laut Beschluss des allgemeinen Prüfungsausschusses den theoretischen Prüfungsteil des
+           Fachschulexamens bestanden. #{s.anrede} #{s.vorname} #{s.name}
+           hat damit die Berechtigung zum Übergang in das Berufspraktikum erworben.
+          .voffset-2
+          |Der allgemeine Prüfungsausschuss stellte in seiner Abschlusskonferenz am #{(hj.konferenzdatum).strftime("%d.%m.%Y")}
+           folgende Leistungen fest:
+          .voffset-2
+          b Theoretischer Prüfungsteil des Fachschulexamens
+          .voffset-1
+      .row
+        .col-xs-12
+          table.table-noten
+            -hj.noten.select{|f| f.fach.fach_krz.start_with? "AS"}.each do |as|
+              tr
+                td width="22%" =as.fach.zeugnisbez
+                td.td-padding-extra =as.lernentw
+                td.td-fach-note
+                  span =s.bk_abschluss_leistungen.find{|f| f.fach_id == as.fach_id}.note(:note_abschluss)
+      .row
+        .voffset-8
+        .col-xs-4
+          |#{Schule.ort}, den #{hj.zeugnis_datum.strftime("%d.%m.%Y")}
+          .voffset-5
+        .col-xs-5
+          .voffset-2
+          hr
+          .text-center
+            =>"#{Schule.first.schulleiter_vorname} #{Schule.first.schulleiter_name}"
+            |– Vorsitzender des allgemeinen Prüfungsausschusses

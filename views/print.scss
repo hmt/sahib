@@ -1,3 +1,6 @@
+$font-stack:    "Tex Gyre Heros";
+$font-color-light:  #c0c0c0;
+
 @font-face {
   font-family: 'TeX Gyre Heros';
   src: url('/fonts/texgyreheros-regular-webfont.woff') format('woff');
@@ -27,38 +30,96 @@ hr {
   border-color: #000;
   height: 1px;
   margin: 3px 0;
+  &.hr-rot {
+    border-color: #ff2700;
+    margin: 8px 0;
+  }
+  &.hr-grau {
+    border-color: rgb(100,100,100) !important;
+  }
+}
+.table-eng {
+  margin-bottom: 0px;
+  td {
+  padding: 1px !important;
+  font-size: 9pt;
+  }
+}
+td.td-center {
+  text-align: center;
+}
+th.rotate {
+  /* Something you can count on */
+  height: 86px;
+  white-space: nowrap;
+  div {
+    transform:
+    /* Magic Numbers */
+    translate(22px, 50px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+    width: 30px;
+    span {
+      border-bottom: 1px solid #ccc;
+      padding: 5px 0;
+    }
+  }
 }
 .table-noten {
-  margin-top: 1em;
   margin-bottom: 1em;
 }
 .fach-bezeichnung {
   padding-left: 10mm;
+  &.padding-5 {
+    padding-left: 75px;
+  }
 }
-.fach-note {
-  background-color: #c0c0c0 !important;
-  text-align: center;
+.td-fach-note {
   border: 5px white solid;
-  padding-left: 5mm;
-  padding-right: 5mm;
+  padding: 0;
+  width: 12em;
+  span {
+    background-color: #c0c0c0 !important;
+    text-align: center;
+    width: 10em;
+    display: block;
+    vertical-align: middle;
+    margin:0 auto;
+  }
 }
-.lernbereich {
-  padding-left: 20mm;
+.td-padding-extra {
+  padding: 2mm 0 2mm 0;
 }
-.box-datum {
+.fachgruppe-margin {
+  padding-top: 0.3em;
+}
+.pull-bottom {
   position: absolute;
-  bottom: 40mm;
-}
-.box-unterschrift {
-  position: absolute;
-  bottom: 20mm;
+  bottom: 0;
+  padding: 0;
+  //row zu kurz, wenn Text nicht mehrzeilig ist
   width: 100%;
+  .schulnummer {
+    text-align: right;
+  }
+}
+.klein {
+  font-size: 8pt;
+}
+.klein-7 {
   font-size: 7pt;
 }
-.box-kleingedrucktes {
-  position: absolute;
-  bottom: 0mm;
-  font-size: 7pt;
+.klein-8 {
+  font-size: 8pt;
+}
+.klein-9 {
+  font-size: 9pt;
+}
+.eng {
+  line-height: 1.3em;
+}
+.grau {
+  color: rgb(100,100,100) !important;
 }
 .seitenlogo {
   position: absolute;
@@ -72,27 +133,34 @@ hr {
 .page {
   position: relative;
   padding: 10mm 25mm 10mm 25mm;
-  background-color: #ffeaea;
+  &:active {background-color: #ffeaea;}
   border: 1px solid black;
   -webkit-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
   -moz-box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
   box-shadow: 5px 5px 4px 0px rgba(192,192,192,1);
-  margin-bottom: 10px;
   -webkit-print-color-adjust: exact;
 }
 .subpage {
-  font: 10pt "Tex Gyre Heros" !important;
+  font: 10pt $font-stack;
   background-color: white;
   position: relative;
   min-height: 100%;
+  &.font-size-11 {
+    font: 11pt $font-stack;
+  }
 }
 @media print {
-  .container {
-    padding: 0;
-    margin: 0;
+  * {
+    //alles was Farbe hat mitdrucken
+    -webkit-print-color-adjust: exact;
+  }
+  //Bootstrap-Eigenart Links mit auszudrucken...
+  a[href]:after {
+    content: "";
   }
   .page {
     page-break-after: always;
+    margin: 0px;
     border: none;
     margin-bottom: 0px;
     -webkit-box-shadow:initial;
