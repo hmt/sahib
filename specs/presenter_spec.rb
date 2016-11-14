@@ -1,5 +1,6 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 include SpecHelper
+include Presenters
 
 describe "Presenter" do
   describe 'Typesaver' do
@@ -52,35 +53,6 @@ describe "Presenter" do
       Warnung.add "Kalle", "Mehl"
       Warnung.flush.must_equal({"Kalle" => ["Wolle", "Mehl"]})
       Warnung.list.must_equal {}
-    end
-  end
-
-  describe "AbschnittPresenter" do
-    before do
-      Warnung.flush
-      @a = AbschnittPresenter.new(Schueler.first.halbjahr(2008,2))
-    end
-
-    it "gibt passende default strings aus yaml zurück" do
-      @a.string("Bereich").must_equal "Bereich fehlt"
-    end
-
-    it "gibt passende default strings aus yaml zurück und warnt" do
-      @a.string("Bereich")
-      Warnung.list.must_equal({"Dokument"=>["Es sollten Einstellungen für den Bildungsgang 14-106-00 in der Datei config/strings.yml vorgenommen werden"]})
-    end
-
-    it "gibt Strings zurück" do
-      @a.string("Berufsbezeichnung_m").must_equal "männliche Berufsbezeichnung"
-    end
-
-    it "gibt Strings nach Jahr zurück" do
-      @a.string("Berufsbezeichnung_w").must_equal "weibliche Berufsbezeichnung 2009"
-    end
-
-    it "gibt Strings nach Jahr nicht zurück, wenn das Jahr früher ist als zuerst verfügbar" do
-      a = AbschnittPresenter.new(Schueler.first.halbjahr(2007,2))
-      a.string("Berufsbezeichnung_w").must_include "String"
     end
   end
 end

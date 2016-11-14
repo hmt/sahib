@@ -1,0 +1,31 @@
+---
+# Erläuterung der strings.yml:
+# erste Zeile ist die Fachklassenkennung, unter der Schild die Ausbildungen sortiert
+# hier müssen alle Schulformen angelegt werden, da viele Informationen nicht in Schild abgelegt sind,
+# bzw. praktischer hier sind.
+# Zusätzliche Strings lassen sich hier ebenfalls anlegen, je nach Bedarf
+#
+# Ändern sich Angaben im Laufe der Zeit, so kann _vor_ den letzten Wert eine Jahreszahl
+# gesetzt werden und Sahib wählt den String, der <= abschnittsjahr ist.
+# z.B.
+# Bereich:
+#   2013: Bereich Erziehung und Soziales
+#   2015: Bereich Erziehung, Hauswirtschaft und Soziales
+#
+#   Für Dokumente ab 2015 wir letzteres gewählt, Dokumente in 2013 und 14 wählen
+#   ersteres.
+#
+default: #Fallback für alle anderen Fachklassen
+  Schulform: Schulform fehlt
+  Bereich: Bereich fehlt
+  Zeugniskopf: des Bildungsgangs ohne Angabe
+  Berufsbezeichnung_m: männliche Berufsbezeichnung
+  Berufsbezeichnung_w:
+    2008: weibliche Berufsbezeichnung 2009
+    2012: weibliche Berufsbezeichnung
+  Fachgruppe:
+    10: üblicherweise allgemeinbildende Fächer
+    20: üblicherweise berufsbezogene Fächer
+    30: üblicherweise Fächer des Differenzierungsbereichs
+  Fremdsprache:
+    19: (B2)

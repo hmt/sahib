@@ -6,7 +6,12 @@
 # SLIMER_SSL_PROFILE: ein Profil erstellen für Slimer, damit SSL geht.
 # Siehe: http://darrendev.blogspot.de/2013/10/slimerjs-getting-it-to-work-with-self.html
 
-# anschließend umebenennen in config/env.yml
+# anschließend umebenennen in config/env_init.yml
+default:
+  SLIMERJSLAUNCHER: "/usr/bin/firefox"
+  S_REPO_ADMIN: true
+  S_REPO_LOCATION: "./plugins"
+  S_REPOS:
 
 development:
   S_ADAPTER: mysql2
@@ -15,7 +20,7 @@ development:
   S_PASSWORD: schild
   S_DB: schild_test
   SLIMERJSLAUNCHER: /usr/bin/firefox
-  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
+  SLIMER_SSL_PROFILE:
 
 testing:
   S_ADAPTER: mysql2
@@ -24,7 +29,12 @@ testing:
   S_PASSWORD: schild
   S_DB: schild_test
   SLIMERJSLAUNCHER: /usr/bin/firefox
-  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
+  SLIMER_SSL_PROFILE:
+  S_REPOS:
+    "./specs/doks":
+      klass: LocalRepo
+      origin: some_path_local_or_remote
+      enabled: true
 
 production:
   S_ADAPTER: mysql2
@@ -33,4 +43,4 @@ production:
   S_PASSWORD: geheimes_passwort
   S_DB: schild_echte_db
   SLIMERJSLAUNCHER: /usr/bin/firefox
-  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
+  SLIMER_SSL_PROFILE:

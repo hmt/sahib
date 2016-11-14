@@ -1,38 +1,28 @@
-.voffset-halb {
-  margin-top: 0.5em;
-}
 .voffset-1 {
   margin-top: 1em;
 }
-.voffset-2 {
-  margin-top: 2em;
-}
-.voffset-3 {
-  margin-top: 3em;
-}
-.voffset-4 {
-  margin-top: 4em;
-}
-.voffset-5 {
-  margin-top: 5em;
-}
-.voffset-6 {
-  margin-top: 6em;
-}
-.voffset-7 {
-  margin-top: 7em;
-}
-.voffset-8 {
-  margin-top: 8em;
-}
-.voffset-9 {
-  margin-top: 9em;
-}
-tr.clickable-row {
+
+tr.clickable-row, .clickable {
   cursor: pointer;
+  cursor: hand;
 }
-.td-center {
-  text-align:center;
+
+th.rotate {
+  /* Something you can count on */
+  height: 86px;
+  white-space: nowrap;
+  div {
+    transform:
+    /* Magic Numbers */
+    translate(22px, 50px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+    width: 30px;
+    span {
+      border-bottom: 1px solid #ccc;
+      padding: 5px 0;
+    }
+  }
 }
 
 /*

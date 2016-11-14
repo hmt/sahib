@@ -1,28 +1,49 @@
-==partial :p_klassenkopf, :k => klasse, :jahr => klasse.s.akt_schuljahr, :abschnitt => klasse.s.akt_abschnitt, :dokumente => dokumente
--[klasse.aktive_schueler, klasse.inaktive_schueler].each_with_index do |k,ii|
-  .row class=(ii == 0 ? "" : "hidden-print")
-    .col-xs-12.col-md-10
-      h3 #{ii == 0 ? "Aktive Schüler" : "Inaktive Schueler"}
-      table.table.table-condensed
-        tr
-          th
-            th Vorname
-          th Name
-          th Adresse
-          th Telefon
-          th Geburtsdatum
-          th Info
-        -k.each_with_index do |s,i|
-          tr.clickable-row data-url="/schueler/#{s.id}"
-            td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
-              =i+1
-            td =s.vorname
-            td =s.name
-            td =s.adresse
-            td =s.telefon
-            td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
-              =s.geburtsdatum.strftime("%d.%m.%Y")
-              ==< s.monate_bis_18 ? "<small>(#{s.monate_bis_18}m)</small>" : ""
-            td
-              -if s.vermerke.any?
-                span.label.label-warning data-toggle="tooltip" data-placement="left" title="#{s.vermerke.map{|v| v.bemerkung}.join('; ')}" =s.vermerke.count{|v| v.bemerkung}
+.row
+  .col-xs-12
+    .tab-content
+      ul.nav.nav-tabs role="tablist"
+        li.active role="presentation"
+          a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab" Schüler
+        li#vorschau-tab role="presentation" style="visibility: hidden;"
+          a aria-controls="vorschau" data-toggle="tab" href="#vorschau" role="tab" Vorschau
+
+      #schueler.tab-pane.active role="tabpanel"
+        .row
+          .col-xs-6
+            h1
+              =>versetzung.klasse
+              small =versetzung.fachklasse.bezeichnung rescue "Fachklasse fehlt"
+            small =versetzung.klassenlehrer_krz
+          .col-xs-6
+            h1 #{jahr}, #{abschnitt}
+        -[klasse.aktive_schueler, klasse.inaktive_schueler].each_with_index do |k,ii|
+          -next if k.empty?
+          .row class=(ii == 0 ? "" : "hidden-print")
+            .col-xs-12
+              h3 #{ii == 0 ? "Aktive Schüler" : "Inaktive Schueler"}
+              table.table.table-condensed
+                tr
+                  th
+                    th Vorname
+                  th Name
+                  th Adresse
+                  th Telefon
+                  th Geburtsdatum
+                  th Info
+                -k.each_with_index do |s,i|
+                  tr.clickable-row data-url="/auswahl/schueler/#{s.id}"
+                    td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
+                      =i+1
+                    td =s.vorname
+                    td =s.name
+                    td =s.adresse
+                    td =s.telefon
+                    td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
+                      =s.geburtsdatum.strftime("%d.%m.%Y")
+                      ==< s.monate_bis_18 ? "<small>(#{s.monate_bis_18}m)</small>" : ""
+                    td
+                      -if s.vermerke.any?
+                        span.label.label-warning data-toggle="tooltip" data-placement="left" title="#{s.vermerke.map{|v| v.bemerkung}.join('; ')}"
+                          =s.vermerke.count{|v| v.bemerkung}
+      #vorschau.tab-pane role="tabpanel"
+        iframe#doc-frame src="" frameborder="0"

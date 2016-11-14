@@ -5,105 +5,91 @@ html lang="en"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     title #{title ||= "Sahib"}
     link rel="stylesheet" href="/assets/bootstrap/3.3.5/bootstrap.min.css"
+    link rel="stylesheet" href="/assets/fa/css/font-awesome.min.css"
     link href="/css/app.css" rel="stylesheet"
-    link href="/css/print.css" rel="stylesheet"
     link href="/favicon.ico" rel="shortcut icon"
     script src="/assets/js/js-libs.js"
-  body
+    script src="/assets/js/sahib.js"
+    / javascript:
+    /   var warnung_session = #{{session[:warnungen].to_json}}
+  body style="padding-top: 70px"
+    nav.navbar.navbar-default.navbar-fixed-top.hidden-print
+      .container-fluid
+        a.navbar-brand href=url('/')
+          i.fa.fa-home.fa-lg
+        form.navbar-form.navbar-left#search-form name="search" role="search"
+          input.form-control#searchinput style="width:430px !important;" placeholder=("Klasse oder Name eingeben …") type="text" /
+        -if request.url.include?("/auswahl/")
+          .navbar-left.abschnitt-button-group.btn-group
+            -if klasse.count == 1
+              -disabled_zurück=klasse.first.halbjahr(jahr,abschnitt) == klasse.first.abschnitte.first
+              -disabled_vor=klasse.first.halbjahr(jahr, abschnitt) == klasse.first.abschnitte.last
+              -if abschnitt == 1
+                -link_zurück = "/auswahl/schueler/#{jahr-1}/#{abschnitt+1}/#{klasse.first.id}"
+                -link_vor = "/auswahl/schueler/#{jahr}/#{abschnitt+1}/#{klasse.first.id}"
+              -else
+                -link_zurück = "/auswahl/schueler/#{jahr}/#{abschnitt-1}/#{klasse.first.id}"
+                -link_vor = "/auswahl/schueler/#{jahr+1}/#{abschnitt-1}/#{klasse.first.id}"
+            -else
+              -disabled_zurück=versetzung._v_klasse.nil? && abschnitt == 1
+              -disabled_vor=versetzung._f_klasse.nil? && abschnitt == 2 || klasse.first.halbjahr(jahr, 2).nil?
+              -if abschnitt==1
+                -link_zurück="/suche/#{jahr-1}/#{abschnitt+1}/#{versetzung.v_klasse}"
+                -link_vor="/suche/#{jahr}/#{abschnitt+1}/#{versetzung.klasse}"
+              -else
+                -link_zurück="/suche/#{jahr}/#{abschnitt-1}/#{versetzung.klasse}"
+                -link_vor="/suche/#{jahr+1}/#{abschnitt-1}/#{versetzung.f_klasse}"
+            a.btn.navbar-btn.btn-primary href=link_zurück type="button" class=(disabled_zurück ? "disabled":"")
+              i.fa.fa-backward.fa-lg
+            a.btn.navbar-btn.btn-primary href=link_vor type="button" class=(disabled_vor ? "disabled":"")
+              i.fa.fa-forward.fa-lg
+          ul.nav.navbar-nav.navbar-left style="margin-left:10px"
+            li.dropdown
+              button.btn.navbar-btn.btn-primary.dropdown-toggle href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+                span.caret>
+                'Dokumente
+              ul.dropdown-menu
+                = "Sie müssen Dokumente in den Repositories aktivieren" if dokumente.empty?
+                -dokumente.each do |d|
+                  -next if abschnitt == d.get("Ignoriere-Abschnitt")
+                  li
+                    -link="/dokumente/#{settings.repos.find{|r| r.enabled? && r.include?(d)}.repo_name}/#{d.document_key}/#{jahr}/#{abschnitt}/#{klasse.count > 1 ? klasse.aktive_schueler.map{|i|i.id}.join(',') : klasse.first.id}"
+                    a.frame-link href=url(link) data-pdflink="#{request.url}/#{jahr}_#{abschnitt}_#{versetzung.klasse.upcase}_#{klasse.count == 1 ? klasse.first.name : ""}_#{d.document_key}.pdf?pdf_format=#{d.get "Format"}&pdf_orientierung=#{d.get "Orientierung"}"
+                      =d.get("Name")
+        .navbar-left.pdf-button style="display: none; margin-left: 10px;"
+          a#pdf-link href=""
+            button.btn.navbar-btn.btn-success type="button" PDF erzeugen
+        ul.nav.navbar-nav.navbar-right style="padding-right: 10px"
+          -if Presenters::Warnung.list && Presenters::Warnung.list.count > 0
+            li
+              a href="#"
+                span.label.label-warning#label-warnungen style="display:none;" !
+                / =Presenters::Warnung.list && Presenters::Warnung.list.count
+          li.dropdown.navbar-right
+            a.dropdown-toggle href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+              i.fa.fa-cog.fa-lg
+            ul.dropdown-menu
+              li
+                a.toggle-warnungen href="#"
+              -if settings.config['S_REPO_ADMIN']
+                li
+                  a#update-repos href="#" Dokumente aktualisieren
+                li
+                  a href=url("/repos") Repositories bearbeiten
     .container
-      .row.hidden-print
-        .voffset-1
-        .col-xs-5
-          form#search-form name="search" role="search"
-            input.form-control.input-lg#searchinput placeholder=("Klasse oder Name eingeben …") type="text" /
-        -if request.path_info.start_with?("/dokumente/")
-          .col-xs-offset-1.col-xs-4
-            a.btn.btn-success.btn-lg href="#{request.url}/#{pdf_name}.pdf?pdf_format=#{doc.get "Format"}&pdf_orientierung=#{doc.get "Orientierung"}"
-              |PDF erzeugen
-      .row.hidden-print
-        .modal.fade#fehler-modal
-          .modal-dialog
-            .modal-content
-              .modal-header
-                button.close aria-label="Close" data-dismiss="modal" type="button"
-                  span aria-hidden="true"  &times;
-                h4.modal-title Warnung
-              .modal-body#fehler-modal-body
-                dl.dl-horizontal#fehler-modal-body-name
-              .modal-footer
-                button.btn.btn-default data-dismiss="modal" type="button"  OK
-        .voffset-1
-      ==yield
-    javascript:
-      (function() {
-        var status = function(s,j) {
-          var color;
-          var text = "✓";
-          switch (s) {
-            case 2:
-              color = "success";
-              break;
-            case 8:
-              color = "warning";
-              break;
-            case 9:
-              color = "danger";
-              text = j;
-              break;
-            default:
-              color = "info";
-          }
-          return '<span class=\"label label-' + color + '\">' + text + '</span>'
-        };
-        var schueler = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          limit: 30,
-          remote: '/suche/schueler/autocomplete.json?pattern=%QUERY'
-        });
-        var klassen = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
-          limit: 30,
-          remote: '/suche/klassen/autocomplete.json?pattern=%QUERY'
-        });
-        schueler.initialize();
-        klassen.initialize();
-
-        $("#searchinput").typeahead(null, {
-          name: 'name',
-          displayKey: 'value',
-          source: klassen.ttAdapter()
-        },
-        { name: 'name',
-          displayKey: 'value',
-          source: schueler.ttAdapter(),
-          templates: {
-            suggestion: function (data) {
-              return '<p>' + data.value + ' ' + status(data.status, data.jahr) + '</p>';
-              }
-          }
-        }).on("typeahead:selected typeahead:autocompleted", function(e, datum) { window.location.href = datum.link; });
-        $("#searchinput").focus();
-        $(".clickable-row").click(function() {
-          window.document.location = $(this).data("url");});
-        $('[data-toggle="tooltip"]').tooltip();
-        if (#{request.path_info.start_with?("/dokumente/")}) {
-          var warnungen = #{{Presenters::Warnung.flush.to_json}}
-          if (Object.keys(warnungen).length > 0) {
-            for (var schueler in warnungen) {
-              $("#fehler-modal-body-name").append("<dt>"+schueler+"</dt>")
-              for (var meldung of warnungen[schueler]) {
-                $("#fehler-modal-body-name").append("<dd>"+meldung+"</dd>")
-              }
-            }
-            $('#fehler-modal').modal();
-          }
-        }
-        $('img[data-failover]').error(function(){
-          var failover = $(this).data('failover');
-          if (this.src != failover){
-            this.src = failover;
-          }
-        });
-      }).call(this);
+      .row
+        .col-xs-12
+          .row.hidden-print
+            .modal.fade#fehler-modal
+              .modal-dialog
+                .modal-content
+                  .modal-header
+                    button.close aria-label="Close" data-dismiss="modal" type="button"
+                      span aria-hidden="true"  &times;
+                    h4.modal-title Warnung
+                  .modal-body#fehler-modal-body
+                    dl.dl-horizontal#fehler-modal-body-name
+                  .modal-footer
+                    button.btn.btn-default data-dismiss="modal" type="button" OK
+          .row
+            ==yield

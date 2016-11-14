@@ -1,14 +1,14 @@
 # sahib
 `sahib` ist eine grafische Oberfläche für Schild-Datenbanken. Schild ist das offizielle Schulverwaltungssystem in NRW.
 
-Jetzt gleich testen und auf [sahib.hmt.im](http://sahib.hmt.im) mit `admin` anmelden. Kein Passwort erforderlich. Die Daten sind Testdaten der Fa. Ribeka.
+Jetzt gleich testen unnter [sahib.hmt.im](http://sahib.hmt.im). Die Daten sind Testdaten der Fa. Ribeka.
 
-Im Gegensatz zu Schild ist `sahib` quelloffen und kann jederzeit angepasst werden. Es baut auf die [`schild`-Bibliothek](https://github.com/hmt/schild) auf und kann prinzipiell auf alle in Schild zur Verfügung stehenden Daten zugreifen. Diese Daten können ausgelesen und mit Hilfe von `sahib` im Browser dargestellt und in PDF umgewandelt werden.
+Im Gegensatz zu Schild ist `sahib` quelloffen und kann jederzeit angepasst werden. Es baut auf die [`schild`-Bibliothek](https://github.com/hmt/schild) auf und kann prinzipiell auf alle in Schild zur Verfügung stehenden Daten zugreifen. Diese Daten können ausgelesen und mit Hilfe von `sahib` formatiert im Browser dargestellt und in PDF umgewandelt werden.
 
-`sahib` ersetzt Schild nicht, bietet aber die Möglichkeit alternativ Dokumente zu erstellen. Im Gegensatz zum Formulardesigner, der in Schild eingebaut ist, kann `sahib` auf viele Standards zurückgreifen, die bereits lange erprobt und dokumentiert sind. HTML, CSS und JavaScript können vollständig zur Dokumentenerstellung genutzt werden und dienen als Grundlage zur Produktion hochwertiger PDF.
+`sahib` ersetzt Schild nicht, bietet aber die Möglichkeit, alternativ Dokumente zu erstellen. Im Gegensatz zum Formulardesigner, der in Schild eingebaut ist, kann `sahib` auf viele Bibliotheken aus der professionellen Webentwicklung zurückgreifen, die bereits lange erprobt und dokumentiert sind. Die Erzeugung hochwertiger PDF-Dokumente in `sahib` wird ausschließlich über HTML und CSS gesteuert.
 
 ## Funktionsweise von sahib
-`sahib` baut auf moderne Webtechnologien, die unabhängig ständig weiter entwickelt und gepflegt werden. `sahib` ist im Prinzip nur eine Schnittstelle zwischen Schild und Dokument, das für die Abfrage der Daten aus der Schild-Datenbank zuständig ist und dafür sorgt, dass die Dokumente alle notwendigen Daten bekommen.
+`sahib` baut auf moderne Webtechnologien, die unabhängig ständig weiter entwickelt und gepflegt werden. `sahib` ist im Prinzip nur eine Schnittstelle zwischen Schild und Dokument, die für die Abfrage der Daten aus der Schild-Datenbank zuständig ist und dafür sorgt, dass die Dokumente alle notwendigen Daten bekommen.
 
 Sofern Schild eine MySQL-Datenbank (oder andere externe Datenbank) verwendet, auf die `sahib` zugreifen kann, steht einem Einsatz nichts im Weg.
 
@@ -20,7 +20,7 @@ Wird aus dem Dropdown-Menu eine Klasse oder ein Schüler ausgewählt, erscheint 
 
 Zwei Knöpfe ermöglichen die Auswahl eines bestimmten Abschnitts (oder Halbjahr) und eines Dokuments. Wie in Schild muss zunächst das Jahr und der Abschnitt gewählt werden, damit passend dazu ein Dokument erzeugt werden kann.
 
-Je nach Schulform oder Bildungsgang kann nun ein Dokument ausgewählt und angezeigt werden. Entsprechend der Datenlage folgen Warnmeldungen oder die vollständige anzeige des Dokuments. Ebenso besteht die Möglichkeit der PDF-Erzeugung. Alle Dokumente können als Klassensatz oder für einzelne Schüler erzeugt werden.
+Je nach Schulform oder Bildungsgang kann nun ein Dokument ausgewählt und angezeigt werden. Entsprechend der Datenlage folgen Warnmeldungen oder die vollständige Anzeige des Dokuments. Ebenso besteht die Möglichkeit der PDF-Erzeugung. Alle Dokumente können als Klassensatz oder für einzelne Schüler erzeugt werden.
 
 `sahib` liefert eine Reihe von Standard-Formularen mit, die angepasst oder neu geschrieben werden können. Sie sind im repository unter `dokumente` einzusehen.
 
@@ -61,7 +61,7 @@ So ist z.B. der Kopf eines Zeugnisses so formuliert:
     br /
     'war vom #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} bis zur Aushändigung des Zeugnisses
 ```
-Dabei ersetzt slim automatisch den eingebundenen Ruby-Code, der sich zwischen den `#{}` aufhält. Ruby-Programmierern fällt auf, dass dies den interpolierten Strings gleichkommt.
+Dabei ersetzt slim automatisch den eingebundenen Ruby-Code, der sich zwischen den `#{}` aufhält. Geübten Programmierern fällt auf, dass hier interpolierten Strings zum Einsatz kommen.
 
 Da die meisten Dokumente auf zwei Objekten aufbauen, dem Schüler- und dem Abschnittsobjekt, gestaltet sich die dynamische Abfrage recht komfortabel. Über `s.ein_datenbankfeld` lassen sich alle Informationen aus der Datenbank abrufen, inklusive einiger Hilfsmethoden, wie z.b. die Anrede, Geschlecht oder auch die Fachklasse etc. Es empfiehlt sich die Dokumente genauer anzuschauen und damit zu experimentieren.
 
@@ -77,8 +77,10 @@ Zur Erzeugung der PDF wird ebenfalls ein Browser auf dem Server verwendet. Die B
 
 Da im Browser alle Daten schon in endgültiger Fassung angezeigt werden und alle Dokumente aus HTML und CSS bestehen, kann auch direkt im Browser mit Hilfe der Entwicklerwekzeuge nach Fehlern gesucht und Feineinstellungen vorgenommen werden. Es muss nicht geraten werden, welche Einstellung verändert werden muss, im Browser kann direkt verändert und angepasst werden bei gleichzeitiger Ansicht des Ergebnisses. Das macht auch die Erstellung komplizierter Dokumente sehr komfortabel.
 
-## Installation
-`sahib` sollte als git-Repository heruntergeladen werden, damit es leicht zu aktualisieren bleibt. Dazu sollte [git](https://git-scm.com) installiert sein. Ebenso wird die Programmiersprache [Ruby](https://ruby-lang.org) erfordert, da `sahib` ein Ruby-Script ist. Sobald vorhanden, kann es losgehen
+## Installations
+Zwei Installationsmöglichkeiten stehen zur Auswahl, einmal über Docker und einmal von Hand. Die Installation mit Docker ist leider noch nicht dokumentiert und es steht auch noch kein Image bereit. Wer sich auskennt, `slimerjs` muss beim letzten `COPY` relativ zu `sahib` mit eingebunden werden, sonst fehlt es.
+
+Um `sahib` von Hand zu installieren, sollte es als git-Repository heruntergeladen werden, damit es leicht zu aktualisieren bleibt. Dazu sollte [git](https://git-scm.com) installiert sein. Ebenso wird die Programmiersprache [Ruby](https://ruby-lang.org) erfordert, da `sahib` ein Ruby-Script ist. Sobald vorhanden, kann es losgehen
 
 ```sh
 git clone git@github.com:hmt/sahib.git
@@ -91,7 +93,7 @@ cd sahib
 bundle install
 ```
 
-Um `sahib` zu starten wird erwartet, dass eine Schild-Datenbank eingerichtet und zugänglich ist. Dazu müssen in die Datei `config/env.yml` alle nötigen Daten eingetragen werden.
+Um `sahib` zu starten wird erwartet, dass eine Schild-Datenbank eingerichtet und zugänglich ist. Dazu müssen in die Datei `config/env_init.yml` alle nötigen Daten eingetragen werden.
 
 ```sh
 development:
@@ -131,7 +133,7 @@ Als Unterbau für `sahib` dient [sinatra](https://github.com/sinatra/sinatra), e
 
 The MIT License (MIT)
 
-Copyright (c) 2015 HMT
+Copyright (c) 2015-2016 HMT
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

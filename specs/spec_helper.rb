@@ -1,17 +1,15 @@
-ENV['RACK_ENV'] = 'testing'
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'rack/test'
-require 'envyable'
-CONFIG_FILE = ENV['CONFIG_FILE'] || './config/env_example.yml'
-Envyable.load(CONFIG_FILE, ENV['RACK_ENV'])
-ENV['S_ADAPTER'] = "jdbc:mysql" if RUBY_ENGINE == 'jruby'
-require "#{File.dirname(__FILE__)}/../sahib"
+
+ENV["CONFIG_FILE"] = "#{File.dirname(__FILE__)}/../config/env_example.yml"
+
+SAHIB_APP = Rack::Builder.parse_file("#{File.dirname(__FILE__)}/../config.ru").first
 
 module SpecHelper
   include Rack::Test::Methods
   def app
-    Sinatra::Application
+    SAHIB_APP
   end
 
   def session

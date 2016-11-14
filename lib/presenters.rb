@@ -24,6 +24,7 @@ module Presenters
     end
 
     def meth_warnung(meth=nil, ret=nil)
+      return ret if meth == "zeugnis_bem"
       if [String, Time, Fixnum].include? ret.class
         Warnung.add(schueler.name, warn_string(meth))
         ret
@@ -40,6 +41,7 @@ module Presenters
       when "entlassdatum" then "Kein <em>Entlassdatum</em> angegeben"
       when "bk_abschluss" then "Keine <em>Abschlussprüfung</em> in Schild durchgeführt"
       when "sum_fehl_std" then "Keine <em>Fehlstunden</em> angegeben"
+      when "sum_fehl_std_u" then "Statt 0 wurden das Feld für unentschuldigte Fehlstunden freigelassen - es wird 0 eingesetzt"
       else "<em>#{meth.to_s}</em> fehlt"
       end
     end
@@ -76,56 +78,33 @@ module Presenters
   end
 
   class SimpleDelegatorWrapper < SimpleDelegator
-    include StringSaver
+    include Presenters::StringSaver
   end
 
   class AbschnittPresenter < SimpleDelegatorWrapper
-    @@yaml = YAML.load_file('./config/strings.yml')
-
-    def string(*keys)
-      kennung = schueler.fachklasse && schueler.fachklasse.kennung
-      if @@yaml[kennung]
-        string = @@yaml[kennung]
-      else
-        string = @@yaml["default"]
-        Warnung.add("Dokument", "Es sollten Einstellungen für den Bildungsgang #{schueler.fachklasse.kennung} in der Datei config/strings.yml vorgenommen werden") if @@yaml[kennung].nil?
-      end
-      return if string[keys.first].nil?
-      keys.each {|k| string = string.fetch(k)}
-      if string.class == Hash
-        zul_jahr = string.keys.sort.reverse
-        treffer = zul_jahr.find{|j| j <= self.jahr}
-        string = string[treffer] || Warnung.add("Bildungsgang", "Es wurde kein gültiges Jahr für diesen String gefunden. Bitte anlegen")
-      end
-      return string
-    end
-
-    def berufsbezeichnung_mw
-      bez = (schueler.geschlecht == 3 ? string("Berufsbezeichnung_m") : string("Berufsbezeichnung_w"))
-      bez.nil? ? schueler.berufsbezeichnung_mw : bez
-    end
-
     def versetzungsvermerk(art=nil)
-      if abschnitt == 2
-        # AGZ und Entlassdatum vor Juni, dann kein Vermerk (Juni ist willkürlich gewählt)
-        unless art == :agz || self.schueler.entlassdatum.month > 6
-          case self.VersetzungKrz
-          when nil then "Kein Versetzungsvermerk hinterlegt"
-          when "N" then "Nicht versetzt laut Konferenzbeschluss vom #{(konferenzdatum).strftime("%d.%m.%Y")}"
-          when "V" then "Versetzt laut Konferenzbeschluss vom #{(konferenzdatum).strftime("%d.%m.%Y")}"
-          end
+      # AGZ und Entlassdatum vor Juni, dann kein Vermerk (Juni ist willkürlich gewählt)
+      return if art == :agz && self.schueler.entlassdatum.month < 6
+      if abschnitt == 2 || (abschnitt == 1 && klasse.start_with?("H"))
+        case self.VersetzungKrz
+        when nil then "Kein Versetzungsvermerk hinterlegt"
+        when "N" then "Nicht versetzt laut Konferenzbeschluss vom #{(konferenzdatum).strftime("%d.%m.%Y")}"
+        when "V" then "Versetzt laut Konferenzbeschluss vom #{(konferenzdatum).strftime("%d.%m.%Y")}"
         end
       end
     end
 
     def bemerkungen
+      # sollte nach Abschnitt udn Versetzung suchen und entscheiden. Korrigieren 28.6.16
       bemerkung = zeugnis_bem.gsub("\r\n","<br/>")
-      if noten.any?{ |n| n.noten_krz == "5" || n.noten_krz == "6" } && self.VersetzungKrz != "V"
-        bemerkung << "<br/>" unless bemerkung.empty?
-        if schueler.abschluss_datum.include? (self.jahr.to_s)
-          bemerkung << "Nicht ausreichende Leistungen gefährden den Abschluss."
-        else
-          bemerkung << "Nicht ausreichende Leistungen gefährden die Versetzung."
+      if noten.any?{ |n| (n.noten_krz == "5" || n.noten_krz == "6") && n.auf_zeugnis == "+" }
+        unless self.VersetzungKrz != "V"
+          bemerkung << "<br/>" unless bemerkung.empty?
+          if (schueler.abschluss_datum.include? (self.jahr.to_s)) || self.abschnitt == 2
+            bemerkung << "Nicht ausreichende Leistungen gefährden den Abschluss."
+          else
+            bemerkung << "Nicht ausreichende Leistungen gefährden die Versetzung."
+          end
         end
       end
       bemerkung = 'keine' if bemerkung.empty?
@@ -205,11 +184,19 @@ module Presenters
     def initialize(k)
       return if k.empty?
       @k = k.order(:Name)
-      @s = SchuelerPresenter.new(@k.find{|s| [2,8].include? s.status && s.geloescht == "-" && s.gesperrt == "-"} || @k.first)
+      @s = SchuelerPresenter.new(@k.find{|s| ([2,8].include? s.status) && (s.geloescht == "-") && (s.gesperrt == "-")} || @k.first)
     end
 
     def each
       @k && @k.each{ |s| yield SchuelerPresenter.new(s) }
+    end
+
+    def empty?
+      self.count == 0
+    end
+
+    def alle_schueler
+      self.class.new @k.where(:Geloescht => "-", :Gesperrt => "-")
     end
 
     def aktive_schueler

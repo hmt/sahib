@@ -1,86 +1,88 @@
-==partial :p_schuelerkopf, :s => s, :hj => s.halbjahr(jahr, abschnitt) || s.abschnitte.first, :dokumente => dokumente
-.row
-  .col-xs-12
-    .tab-content
-      ul.nav.nav-tabs role="tablist"
-        li.active role="presentation"
-          a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab"  Schüler
-        //li role="presentation"
-          a aria-controls="check" data-toggle="tab" href="#check" role="tab"  Check
-        li role="presentation"
-          a aria-controls="debug" data-toggle="tab" href="#debug" role="tab" Datenbankfelder
-
-      #schueler.tab-pane.active role="tabpanel"
-        .row
-          .col-xs-6
-            .voffset-20
-            table.table.table-condensed
-              tr
-                th Abschnitt
-                -s.abschnitte.each do |a|
-                  th.td-center class=('info' if a.jahr == jahr && a.abschnitt == abschnitt)
-                    a.btn.btn-default.btn-xs href="/schueler/#{s.id}/#{a.jahr}/#{a.abschnitt}" #{a.schuljahr}, #{a.abschnitt}
-              -s.noten_hash.each_pair do |k,v|
+-klasse.each_with_index do |s,i|
+  .row
+    .col-xs-12
+      .tab-content
+        ul.nav.nav-tabs role="tablist"
+          li.active role="presentation"
+            a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab" Schüler
+          li role="presentation"
+            a aria-controls="debug" data-toggle="tab" href="#debug" role="tab" Datenbankfelder
+          li#vorschau-tab role="presentation" style="visibility: hidden;"
+            a aria-controls="vorschau" data-toggle="tab" href="#vorschau" role="tab" Vorschau
+        #schueler.tab-pane.active role="tabpanel"
+          .row
+            .col-xs-6
+              h1
+                '#{s.vorname} #{s.name}
+                small
+                  | #{s.geschlecht == 3 ? "♂" : "♀"} #{s.alter}
+                  -if s.monate_bis_18
+                    small>
+                      =="(#{s.monate_bis_18}m)"
+              a href="/suche/#{jahr}/#{abschnitt}/#{versetzung.klasse}"
+                |#{s.klasse}
+              -hj = s.halbjahr(jahr, abschnitt) || s.abschnitte.first
+              -if hj
+                |, #{s.berufsbezeichnung_mw}
+            -if hj
+              .col-xs-6
+                h1 #{hj.jahr}, #{hj.abschnitt}
+          .row
+            .col-xs-6
+              .voffset-1
+              table.table.table-condensed
                 tr
-                  td #{k}
-                  -v.each do |n|
-                    td.td-center #{n}
-              tr
-                th Fehlstunden
-                -s.abschnitte.each do |a|
-                  td.td-center #{a.sum_fehl_std}
-              tr
-                th unentschudigt
-                -s.abschnitte.each do |a|
-                  td.td-center #{a.sum_fehl_std_u}
-          .col-xs-2
-            -if s.foto_vorhanden?
-              img src="/images/schueler/#{s.id}.jpg"
-          .col-xs-3
-            address
-              strong
-                =>s.vorname
-                =s.name
-              br/
-              =s.strasse
-              br/
-              =>s.plz
-              =s.ort_abk
-              br/
-              br/
-              =s.telefon
-              br/
-              =s.fax
-              br/
-              a href="mailto:#{s.e_mail}" =s.e_mail
+                  th Abschnitt
+                  -s.abschnitte.each do |a|
+                    th.text-center class=('info' if a.jahr == jahr && a.abschnitt == abschnitt)
+                      a.btn.btn-default.btn-xs href="/auswahl/schueler/#{a.jahr}/#{a.abschnitt}/#{s.id}" #{a.schuljahr}, #{a.abschnitt}
+                -s.noten_hash.each_pair do |k,v|
+                  tr
+                    td #{k}
+                    -v.each do |n|
+                      td.text-center #{n}
+                tr
+                  th Fehlstunden
+                  -s.abschnitte.each do |a|
+                    td.text-center #{a.sum_fehl_std}
+                tr
+                  th unentschudigt
+                  -s.abschnitte.each do |a|
+                    td.text-center #{a.sum_fehl_std_u}
+            .col-xs-2
+              -if s.foto_vorhanden?
+                img src="/images/schueler/#{s.id}.jpg"
+            .col-xs-3
+              address
+                strong
+                  =>s.vorname
+                  =s.name
+                br/
+                =s.strasse
+                br/
+                =>s.plz
+                =s.ort_abk
+                br/
+                br/
+                =s.telefon
+                br/
+                =s.fax
+                br/
+                a href="mailto:#{s.e_mail}" =s.e_mail
 
-      #check.tab-pane role="tabpanel"
-      #debug.tab-pane role="tabpanel"
-        .row
-          .col-xs-4
-            dl.dl-horizontal
-              -s.columns.each do |c|
-                dt =c.to_s
-                dd =s[c].to_s
-          .col-xs-4
-            -s.abschnitte.each do |a|
+        #vorschau.tab-pane role="tabpanel"
+          iframe#doc-frame src="" frameborder="0"
+        #debug.tab-pane role="tabpanel"
+          .row
+            .col-xs-4
               dl.dl-horizontal
-                -a.columns.each do |c|
+                -s.columns.each do |c|
                   dt =c.to_s
-                  dd =a[c].to_s
-javascript:
-  (function() {
-    $('#schueler a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    })
-    $('#check a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    })
-    $('#debug a').click(function (e) {
-      e.preventDefault()
-      $(this).tab('show')
-    })
-  })
+                  dd =s[c].to_s
+            .col-xs-4
+              -s.abschnitte.each do |a|
+                dl.dl-horizontal
+                  -a.columns.each do |c|
+                    dt =c.to_s
+                    dd =a[c].to_s
 
