@@ -1,2 +1,6 @@
 .git
-config/env_init.yml
+config/*.env
+config/*.db
+docker-compose.*.yml
+plugins/*/
+tmp/rack

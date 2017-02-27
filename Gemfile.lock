@@ -1,9 +1,16 @@
 GIT
-  remote: git://github.com/hmt/schild.git
-  revision: 34b7f070307b274300bed8b28891ea927029189e
+  remote: https://github.com/headius/jruby-pg.git
+  revision: d7297060881976506fe4b53f402056309f2496f1
   branch: master
   specs:
-    schild (0.7.9)
+    pg_jruby (0.17.1)
+
+GIT
+  remote: https://github.com/hmt/schild.git
+  revision: e18e72c7e051c59f6008ea5cac6ecdbc2365d07d
+  branch: master
+  specs:
+    schild (0.7.11)
       sequel (~> 4)
 
 GEM
@@ -13,18 +20,31 @@ GEM
     ast (2.3.0)
     backports (3.6.8)
     coderay (1.1.1)
-    envyable (1.2.0)
-      thor (>= 0.18.1, < 2.0)
+    daybreak (0.3.0)
+    domain_name (0.5.20170223)
+      unf (>= 0.0.5, < 1.0.0)
+    ffi (1.9.17-java)
     git (1.3.0)
-    hashids (1.0.2)
-    json (2.0.2)
+    hashids (1.0.3)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    jdbc-mysql (5.1.40)
+    json (2.0.3)
+    json (2.0.3-java)
     method_source (0.8.2)
-    minitest (5.9.1)
+    mime-types (3.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2016.0521)
+    minitest (5.10.1)
     minitest-rg (5.2.0)
       minitest (~> 5.0)
     multi_json (1.12.1)
     mysql2 (0.4.5)
-    oga (2.7)
+    netrc (0.11.0)
+    oga (2.9)
+      ast
+      ruby-ll (~> 2.1)
+    oga (2.9-java)
       ast
       ruby-ll (~> 2.1)
     pg (0.19.0)
@@ -32,19 +52,34 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (3.6.0)
+    pry (0.10.4-java)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      spoon (~> 0.0)
+    puma (3.7.1)
+    puma (3.7.1-java)
     rack (1.6.5)
+    rack-cache (1.7.0)
+      rack (>= 0.4)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (11.3.0)
+    rake (12.0.0)
+    rest-client (2.0.1)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     ruby-ll (2.1.2)
       ansi
       ast
-    sass (3.4.22)
-    sequel (4.40.0)
-    sinatra (1.4.7)
+    ruby-ll (2.1.2-java)
+      ansi
+      ast
+    sass (3.4.23)
+    sequel (4.43.0)
+    sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
@@ -59,15 +94,21 @@ GEM
       temple (~> 0.7.6)
       tilt (>= 1.3.3, < 2.1)
     slop (3.6.0)
+    spoon (0.0.6)
+      ffi
     temple (0.7.7)
-    thor (0.19.1)
-    tilt (2.0.5)
+    tilt (2.0.6)
+    unf (0.1.4)
+      unf_ext
+    unf (0.1.4-java)
+    unf_ext (0.0.7.2)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
-  envyable
+  daybreak
   git
   hashids
   jdbc-mysql
@@ -77,10 +118,13 @@ DEPENDENCIES
   mysql2
   oga
   pg
+  pg_jruby (= 0.17.1)!
   pry
   puma
+  rack-cache
   rack-test
   rake
+  rest-client
   sass
   schild!
   sinatra
@@ -88,4 +132,4 @@ DEPENDENCIES
   slim
 
 BUNDLED WITH
-   1.12.3
+   1.13.7

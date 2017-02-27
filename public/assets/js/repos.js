@@ -4,6 +4,7 @@ $(function() {
     $.ajax({
       method: "PUT",
       url: "/repos/toggle-state",
+      dataType: "json",
       data: {"id":$(_self).data("id")}
     })
     .done(function(response) {
@@ -21,6 +22,7 @@ $(function() {
     _self = this;
     $.ajax({
       method: "PUT",
+      dataType: "json",
       url: "/repos/update",
       data: {"id":$(_self).data("id")}
     })
@@ -35,6 +37,7 @@ $(function() {
     $.ajax({
       method: "DELETE",
       url: "/repos/delete",
+      dataType: "json",
       data: {"id":$(_self).data("id")}
     })
     .done(function(response) {
@@ -52,11 +55,12 @@ $(function() {
     button.text('Adresse speichern …');
     $.ajax({
       method: "POST",
+      dataType: "json",
       url: "/repos/create",
       data: $("form").serialize()
     })
     .done(function(response) {
-      if (response == "true") {
+      if (response == true) {
         button
           .removeClass('btn-warning')
           .addClass('btn-success')
@@ -64,11 +68,21 @@ $(function() {
           .text('Gespeichert');
         $.get('/restart');
         $('.table > tbody').append("\
-                                  <tr> \
-                                  <td width='90%'>"+$('#inputName').val()+"</td> \
-                                  <td class='update-repo' width='5%' data-id='"+$('#inputName').val()+"'><b class='clickable'>↻</b></td>\
-                                  <td class='delete-repo' width='5%' data-id='"+$('#inputName').val()+"'><b class='clickable'>✕</b></td>"
-                                 );
+                    <tr>\
+                      <td>"+$('#inputName').val()+"\
+                      </td>\
+                      <td>\
+                      </td>\
+                      <td class='update-repo trans' data-id='"+$('#inputName').val()+"' width='5%'>\
+                        <i class='fa fa-refresh fa-lg clickable' style=''></i>\
+                      </td>\
+                      <td class='toggle-repo' data-id='"+$('#inputName').val()+"' width='5%'>\
+                        <i class='fa fa-lg clickable fa-eye-slash'></i>\
+                      </td>\
+                      <td class='delete-repo' data-id='"+$('#inputName').val()+"' width='5%'>\
+                        <i class='fa fa-trash fa-lg clickable'></i>\
+                      </td>\
+                    </tr>");
       }
       else {
         button

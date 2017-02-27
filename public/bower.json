@@ -1,0 +1,22 @@
+{
+  "name": "public",
+  "authors": [
+    "hmt@dev.im"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "paper-progress": "PolymerElements/paper-progress#^1.0.11",
+    "juicy-html": "Juicy/juicy-html#^1.1.0"
+  }
+}

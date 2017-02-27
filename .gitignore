@@ -1,7 +1,9 @@
 config/*.yml
-!config/strings.yml
-!config/textbausteine.yml
-!config/doc_einstellungen.yml
+config/*.env
+config/*.db
+plugins/*
+tmp/rack
+docker-compose.*.yml
 .dropbox
 .sass-cache
 todo.txt

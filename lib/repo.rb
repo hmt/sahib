@@ -1,4 +1,5 @@
 require 'git'
+require 'yaml'
 require "#{File.dirname(__FILE__)}/document"
 
 class RepoFactory
@@ -23,7 +24,7 @@ class Repo
   # Angabe des Pfads zum Repo
   def initialize(location, options)
     @location = location
-    @origin = options["origin"]
+    @origin = options[:origin]
     @repo_name = File.basename location
     @documents = get_repo_files
     @fachklassen_strings = get_fachklassen_strings
@@ -86,8 +87,8 @@ class Repo
   def get_repo_files
     return [] if File.exist?(@location+"/plugin.rb") || File.exist?(@location+"/"+@repo_name+".rb")
     files = Array.new
-    files += Dir[location+"/views/*"].reject{|f| File.directory?(f) || !f[".slim"]}
-    files += Dir[location+"/*"].reject{|f| File.directory?(f) || !f[".slim"]}
+    files += Dir[location+"/views/*"].reject{|f| File.directory?(f) || !f[".slim"] || f['layout.slim']}
+    files += Dir[location+"/*"].reject{|f| File.directory?(f) || !f[".slim"] || f['layout.slim']}
     files.map{|f| Document.new f}
   end
 
@@ -110,11 +111,13 @@ class DisabledRepo
   attr_reader :location
   attr_reader :repo_name
   attr_reader :origin
+  attr_reader :category
 
   def initialize(location, options)
     @location = location
     @enabled = false
-    @origin = options["origin"]
+    @category = :disabled
+    @origin = options[:origin]
     @repo_name = File.basename location
   end
 

@@ -7,24 +7,11 @@ tr.clickable-row, .clickable {
   cursor: hand;
 }
 
-th.rotate {
-  /* Something you can count on */
-  height: 86px;
-  white-space: nowrap;
-  div {
-    transform:
-    /* Magic Numbers */
-    translate(22px, 50px)
-    /* 45 is really 360 - 45 */
-    rotate(315deg);
-    width: 30px;
-    span {
-      border-bottom: 1px solid #ccc;
-      padding: 5px 0;
-    }
-  }
+.scrollable-menu {
+  overflow-x: auto;
+  height: auto;
+  max-height: 600px;
 }
-
 /*
  * * typehead.js-bootstrap3.less
  * * @version 0.2.3

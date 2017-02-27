@@ -42,17 +42,19 @@ html lang="en"
         button.btn.btn-lg.btn-primary.btn-block#test Verbindung testen
         p
         .alert.alert-success role="alert"
-          strong Verbindungsdaten speichern
+          strong Verbindungsdaten anwenden
           p
-          | Läuft sahib in einem Docker-Container, dann wird geprüft, ob ein
-            externer Datenträger, also außerhalb Docker, verfügbar ist und
-            dort gespeichert.
+            |Die eingegebenen Verbindungsdaten sollten in Umgebungsvariablen
+             gespeichert werden, damit sie nicht bei jedem Neustart neu
+             angelegt werden müssen.
           p
-          | Ist keiner vorhanden, dann wird im Docker-Container eine
-            Konfigurationsdatei angelegt. Aber vorsicht, beim nächsten
-            Containerupdate wird diese Datei gelöscht.
-          p
-          | Alternativ können die Umgebungsvariablen direkt an Docker
-            übergeben werden und sahib über folgenden Befehl aufgerufen werden:
-          p
-          pre Dann wäre hier z.B. ein Befehl mit den Variablen
+            |Sahib bietet dafür die *.env Dateien an, die entsprechend der
+             folgenden Angaben eingetragen werden müssen:
+          pre
+            |# zb. als schule.env
+             S_ADAPTER=mysql2
+             S_HOST=localhost
+             S_DB=schild_berufskolleg
+             S_USER=schild
+             S_PASSWORD=schild
+             S_REPO_ADMIN=true

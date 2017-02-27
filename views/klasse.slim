@@ -43,7 +43,10 @@
                       ==< s.monate_bis_18 ? "<small>(#{s.monate_bis_18}m)</small>" : ""
                     td
                       -if s.vermerke.any?
-                        span.label.label-warning data-toggle="tooltip" data-placement="left" title="#{s.vermerke.map{|v| v.bemerkung}.join('; ')}"
+                        span.label.label-warning data-toggle="tooltip" data-placement="left" title="#{s.vermerke.map do |v| v.bemerkung end.join('; ')}"
                           =s.vermerke.count{|v| v.bemerkung}
       #vorschau.tab-pane role="tabpanel"
-        iframe#doc-frame src="" frameborder="0"
+        .row
+          .col-xs-12
+            dom-module id="vorschau-dom"
+              paper-progress disabled="true" indeterminate="true" style="width:100%;"

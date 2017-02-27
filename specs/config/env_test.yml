@@ -1,5 +1,0 @@
----
-testing:
-  SAHIB_TEST: bababa
-production:
-  SAHIB_TEST: gugugu

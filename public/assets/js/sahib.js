@@ -1,4 +1,7 @@
 $(function() {
+  document.documentElement.addEventListener('stamped', function(e){
+    $('paper-progress').attr('disabled', true);
+  }, true);
   var status = function(s,j) {
     var color;
     var text = "✓";
@@ -53,18 +56,11 @@ $(function() {
     });
 
   $(".frame-link").click(function(event) {
+    var href = $(this).attr("href");
     event.preventDefault();
-    $("#doc-frame")
-      .attr({
-        "src": $(this).attr("href"),
-        "scrolling": "no",
-        "frameborder": "0"
-      })
-      .on('load', function() {
-        $(this).css("height", $(this).contents().height() + "px");
-        $(this).css("width", $(this).contents().width() + "px");
-        reload_warnungen();
-      });
+    $('paper-progress').attr('disabled', false);
+    $("#doc-frame").remove();
+    $("#vorschau-dom").append('<template id="doc-frame" is="juicy-html" content='+href+' on-stamped="stamped"></template>');
     $('a[href="#vorschau"]')
       .tab('show');
     $("#vorschau-tab").css("visibility", "visible");
@@ -76,7 +72,6 @@ $(function() {
     window.document.location = $(this).data("url");
   });
   $('[data-toggle="tooltip"]').tooltip();
-
 
   $(".toggle-warnungen").text(
     "Warnungen "+(localStorage.warnungen == "true" ? "ausschalten" : "einschalten")
@@ -100,7 +95,7 @@ $(function() {
     var link = $(this);
     $.get('/repos/update/all')
       .done(function(response) {
-        if (response == "true") {
+        if (response == true) {
           link.text('Aktualisiert');
           $.get('/restart');
         }
@@ -150,25 +145,35 @@ $(function() {
       this.src = failover;
     }
   });
-
-  if ($('.tab-content').length) {
-    //Ersetze URL mit Tab-Adresse, damit man über back navigieren kann
-    history.replaceState(null, null, "#schueler");
-    $(window).scrollTop(0);
-
-    //Tab navigation
-    // add a hash to the URL when the user clicks on a tab
-    $('a[data-toggle="tab"]').on('click', function(e) {
-      history.pushState(null, null, $(this).attr('href'));
-    });
-    // navigate to a tab when the history changes
-    window.addEventListener("popstate", function(e) {
-      var activeTab = $('[href=' + location.hash + ']');
-      if (activeTab.length) {
-        activeTab.tab('show');
-      } else {
-        $('.nav-tabs a:first').tab('show');
-      }
-    });
-  }
+  $('a[data-toggle="tab"]').historyTabs();
 });
+
+//sourced from https://github.com/jeffdavidgreen/bootstrap-html5-history-tabs
++function ($) {
+    'use strict';
+    $.fn.historyTabs = function() {
+        var that = this;
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                $(that).filter('[href="' + event.state.url + '"]').tab('show');
+            }
+        });
+        return this.each(function(index, element) {
+            $(element).on('show.bs.tab', function() {
+                var stateObject = {'url' : $(this).attr('href')};
+
+                if (window.location.hash && stateObject.url !== window.location.hash) {
+                    window.history.pushState(stateObject, document.title, window.location.pathname + $(this).attr('href'));
+                } else {
+                    window.history.replaceState(stateObject, document.title, window.location.pathname + $(this).attr('href'));
+                }
+            });
+            if (!window.location.hash && $(element).is('.active')) {
+                // Shows the first element if there are no query parameters.
+                $(element).tab('show');
+            } else if ($(this).attr('href') === window.location.hash) {
+                $(element).tab('show');
+            }
+        });
+    };
+}(jQuery);

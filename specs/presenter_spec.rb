@@ -52,7 +52,7 @@ describe "Presenter" do
       Warnung.add "Kalle", "Wolle"
       Warnung.add "Kalle", "Mehl"
       Warnung.flush.must_equal({"Kalle" => ["Wolle", "Mehl"]})
-      Warnung.list.must_equal {}
+      Warnung.list.must_be_nil
     end
   end
 end

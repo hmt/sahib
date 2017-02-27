@@ -9,9 +9,10 @@ html lang="en"
     link href="/css/app.css" rel="stylesheet"
     link href="/favicon.ico" rel="shortcut icon"
     script src="/assets/js/js-libs.js"
+    link rel="import" href="/bower_components/paper-progress/paper-progress.html"
+    link rel="import" href="/bower_components/juicy-html/juicy-html.html"
+    script src="/bower_components/webcomponentsjs/webcomponents.js"
     script src="/assets/js/sahib.js"
-    / javascript:
-    /   var warnung_session = #{{session[:warnungen].to_json}}
   body style="padding-top: 70px"
     nav.navbar.navbar-default.navbar-fixed-top.hidden-print
       .container-fluid
@@ -48,14 +49,18 @@ html lang="en"
               button.btn.navbar-btn.btn-primary.dropdown-toggle href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
                 span.caret>
                 'Dokumente
-              ul.dropdown-menu
+              ul.dropdown-menu.scrollable-menu
                 = "Sie müssen Dokumente in den Repositories aktivieren" if dokumente.empty?
-                -dokumente.each do |d|
-                  -next if abschnitt == d.get("Ignoriere-Abschnitt")
-                  li
-                    -link="/dokumente/#{settings.repos.find{|r| r.enabled? && r.include?(d)}.repo_name}/#{d.document_key}/#{jahr}/#{abschnitt}/#{klasse.count > 1 ? klasse.aktive_schueler.map{|i|i.id}.join(',') : klasse.first.id}"
-                    a.frame-link href=url(link) data-pdflink="#{request.url}/#{jahr}_#{abschnitt}_#{versetzung.klasse.upcase}_#{klasse.count == 1 ? klasse.first.name : ""}_#{d.document_key}.pdf?pdf_format=#{d.get "Format"}&pdf_orientierung=#{d.get "Orientierung"}"
-                      =d.get("Name")
+                -klassen_ids=(klasse.count > 1 ? klasse.aktive_schueler.map{|i|i.id}.join(',') : klasse.first.id)
+                -pdfname="#{jahr}_#{abschnitt}_#{versetzung.klasse.upcase}_#{klasse.count == 1 ? klasse.first.name+"_" : ""}"
+                -dokumente.sort.reverse.to_h.each_pair do |repo_name,doks|
+                  li.dropdown-header =repo_name
+                  -doks.each do |d|
+                    li
+                      -link="/dokumente/#{repo_name}/#{d.document_key}/#{jahr}/#{abschnitt}/#{klassen_ids}"
+                      -pdflink="#{pdfname}#{d.document_key}.pdf?pdf_format=#{d.get "Format"}&pdf_orientierung=#{d.get "Orientierung"}"
+                      a.frame-link href=link data-pdflink=pdflink
+                        =d.get("Name")
         .navbar-left.pdf-button style="display: none; margin-left: 10px;"
           a#pdf-link href=""
             button.btn.navbar-btn.btn-success type="button" PDF erzeugen
@@ -64,18 +69,17 @@ html lang="en"
             li
               a href="#"
                 span.label.label-warning#label-warnungen style="display:none;" !
-                / =Presenters::Warnung.list && Presenters::Warnung.list.count
           li.dropdown.navbar-right
             a.dropdown-toggle href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
               i.fa.fa-cog.fa-lg
             ul.dropdown-menu
               li
                 a.toggle-warnungen href="#"
-              -if settings.config['S_REPO_ADMIN']
+              -if ENV['S_REPO_ADMIN']
                 li
                   a#update-repos href="#" Dokumente aktualisieren
                 li
-                  a href=url("/repos") Repositories bearbeiten
+                  a href=url("/repos") Erweiterungen bearbeiten
     .container
       .row
         .col-xs-12
@@ -85,7 +89,7 @@ html lang="en"
                 .modal-content
                   .modal-header
                     button.close aria-label="Close" data-dismiss="modal" type="button"
-                      span aria-hidden="true"  &times;
+                      span aria-hidden="true" &times;
                     h4.modal-title Warnung
                   .modal-body#fehler-modal-body
                     dl.dl-horizontal#fehler-modal-body-name

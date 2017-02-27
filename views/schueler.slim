@@ -1,14 +1,14 @@
 -klasse.each_with_index do |s,i|
   .row
     .col-xs-12
+      ul.nav.nav-tabs role="tablist"
+        li.active role="presentation"
+          a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab" Schüler
+        li role="presentation"
+          a aria-controls="debug" data-toggle="tab" href="#debug" role="tab" Datenbankfelder
+        li#vorschau-tab role="presentation" style="visibility: hidden;"
+          a aria-controls="vorschau" data-toggle="tab" href="#vorschau" role="tab" Vorschau
       .tab-content
-        ul.nav.nav-tabs role="tablist"
-          li.active role="presentation"
-            a aria-controls="schueler" data-toggle="tab" href="#schueler" role="tab" Schüler
-          li role="presentation"
-            a aria-controls="debug" data-toggle="tab" href="#debug" role="tab" Datenbankfelder
-          li#vorschau-tab role="presentation" style="visibility: hidden;"
-            a aria-controls="vorschau" data-toggle="tab" href="#vorschau" role="tab" Vorschau
         #schueler.tab-pane.active role="tabpanel"
           .row
             .col-xs-6
@@ -71,7 +71,10 @@
                 a href="mailto:#{s.e_mail}" =s.e_mail
 
         #vorschau.tab-pane role="tabpanel"
-          iframe#doc-frame src="" frameborder="0"
+          .row
+            .col-xs-12
+              dom-module id="vorschau-dom"
+                paper-progress disabled="true" indeterminate="true" style="width:100%;"
         #debug.tab-pane role="tabpanel"
           .row
             .col-xs-4

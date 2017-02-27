@@ -1,7 +1,3 @@
-require 'sinatra'
-require 'slim'
-require 'sass'
-
 class SahibInit < Sinatra::Application
   configure do
     enable :logging
@@ -50,7 +46,11 @@ class SahibInit < Sinatra::Application
   end
 
   post '/init/datenbank/speichern' do
-    Config.save(params) ? "true" : "false"
+    ENV['S_REPO_ADMIN'] = true
+    params.each_pair do |k,v|
+      ENV[k] = v
+    end
+    "true"
   end
 end
 

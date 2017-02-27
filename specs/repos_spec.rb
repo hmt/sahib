@@ -20,7 +20,8 @@ describe "Repo" do
 
   it "kann auf repo doc zugreifen" do
     authorize 'admin', ''
-    get("/dokumente/#{@r.repo_name}/#{@r.documents.first.document_key}/2008/2/1").status.must_equal 200
+    get "/dokumente/#{@r.repo_name}/#{@r.documents.first.document_key}/2008/2/1"
+    last_response.status.must_equal 200
   end
 end
 
@@ -59,4 +60,3 @@ describe "Strings abfragen" do
     @r.textbaustein(@a, "APO").must_include "Berufskollegs"
   end
 end
-

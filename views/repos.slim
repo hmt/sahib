@@ -1,17 +1,17 @@
 script src="/assets/js/repos.js"
 .row
   .col-xs-12
-    h2 Repositories verwalten
+    h2 Erweiterungen verwalten
     -if settings.repos.empty?
-      |Kein Repository eingerichtet. Bitte unten eins oder mehrere hinzufügen.
+      |Keine Erweiterungen eingerichtet. Bitte unten eine oder mehrere hinzufügen.
     -else
-      h3 Aktivierte Repositories
+      h3 Aktivierte Erweiterungen
       table.table
         tbody.repo-list
           -settings.repos.each do |r|
             tr class=(r.category == :error ? "bg-danger":"")
               td
-                -if r.category == :app && r.enabled?
+                -if r.category == :app
                   a href=url('/app/'+File.basename(r.repo_name))
                     i.fa.fa-rocket
                     =<r.repo_name
@@ -26,13 +26,13 @@ script src="/assets/js/repos.js"
                   i.fa.fa-lg.clickable class=(r.enabled? ? "fa-eye-slash":"fa-eye")
               td.delete-repo width="5%" data-id="#{r.repo_name}"
                 i.fa.fa-trash.fa-lg.clickable
-    h3 Repository hinzufügen
+    h3 Erweiterungen hinzufügen
     .col-sm-9
       form.form-horizontal#datenbank
         .form-group
           .col-sm-3
             select#inputClass.form-control name="klass"
-              option value="GitRepo" git Repository
+              option value="GitRepo" git Erweiterung
               option value="LocalRepo" lokales Verzeichnis
           .col-sm-6
             input#inputLocation.form-control autofocus="" placeholder="Adresse" required="" type="text" name="origin"

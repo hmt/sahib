@@ -25,7 +25,7 @@ module Presenters
 
     def meth_warnung(meth=nil, ret=nil)
       return ret if meth == "zeugnis_bem"
-      if [String, Time, Fixnum].include? ret.class
+      if [String, Time, Integer].include? ret.class
         Warnung.add(schueler.name, warn_string(meth))
         ret
       else
@@ -97,16 +97,6 @@ module Presenters
     def bemerkungen
       # sollte nach Abschnitt udn Versetzung suchen und entscheiden. Korrigieren 28.6.16
       bemerkung = zeugnis_bem.gsub("\r\n","<br/>")
-      if noten.any?{ |n| (n.noten_krz == "5" || n.noten_krz == "6") && n.auf_zeugnis == "+" }
-        unless self.VersetzungKrz != "V"
-          bemerkung << "<br/>" unless bemerkung.empty?
-          if (schueler.abschluss_datum.include? (self.jahr.to_s)) || self.abschnitt == 2
-            bemerkung << "Nicht ausreichende Leistungen gefährden den Abschluss."
-          else
-            bemerkung << "Nicht ausreichende Leistungen gefährden die Versetzung."
-          end
-        end
-      end
       bemerkung = 'keine' if bemerkung.empty?
       return bemerkung
     end

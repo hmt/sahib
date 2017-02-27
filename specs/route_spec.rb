@@ -24,6 +24,11 @@ describe "routes" do
       authorize 'admin', ''
     end
 
+    it "gibt repos 200 zurück" do
+      get '/repos'
+      last_response.status.must_equal 200
+    end
+
     it "gibt home-view 200 zurück" do
       get '/'
       last_response.status.must_equal 200

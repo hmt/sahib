@@ -2,8 +2,6 @@ require 'minitest/autorun'
 require 'minitest/rg'
 require 'rack/test'
 
-ENV["CONFIG_FILE"] = "#{File.dirname(__FILE__)}/../config/env_example.yml"
-
 SAHIB_APP = Rack::Builder.parse_file("#{File.dirname(__FILE__)}/../config.ru").first
 
 module SpecHelper
