@@ -7,10 +7,10 @@ GIT
 
 GIT
   remote: https://github.com/hmt/schild.git
-  revision: e18e72c7e051c59f6008ea5cac6ecdbc2365d07d
+  revision: 7a5fbe68fc78d1ba90164a0324c56a2799e3ed71
   branch: master
   specs:
-    schild (0.7.11)
+    schild (0.7.12)
       sequel (~> 4)
 
 GEM
@@ -78,7 +78,7 @@ GEM
       ansi
       ast
     sass (3.4.23)
-    sequel (4.43.0)
+    sequel (4.44.0)
     sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)

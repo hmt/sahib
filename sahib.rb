@@ -1,12 +1,20 @@
+require 'sequel'
+require 'sinatra'
+require 'sinatra/extension'
+require 'slim'
+require 'sass'
+require 'rack/cache'
 require 'json'
 require 'daybreak'
 require 'rest-client'
 require 'schild'
-# require 'pry' if development?
 include SchildErweitert
+require "#{File.dirname(__FILE__)}/lib/helpers"
+require "#{File.dirname(__FILE__)}/lib/repo"
 require "#{File.dirname(__FILE__)}/lib/presenters"
 include Presenters
 require "#{File.dirname(__FILE__)}/lib/easter"
+# require 'pry' if development?
 
 module Sahib
   class Sahib < Sinatra::Application
@@ -16,6 +24,10 @@ module Sahib
         nutzer = Nutzer.where(:US_LoginName => username).first
         nutzer && nutzer.password?(password)
       end
+      use Rack::Cache,
+        metastore:    'file:./tmp/rack/meta',
+        entitystore:  'file:./tmp/rack/body',
+        verbose:      false
       enable :sessions
       set :session_secret, (ENV['S_SESSION_SECRET'] || 'your_secret')
       puts "Setzen Sie `S_SESSION_SECRET` in Ihrer Konfigurationsdatei" unless ENV['S_SESSION_SECRET']

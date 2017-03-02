@@ -1,16 +1,19 @@
 version: '2.1'
 services:
   sahib:
-    image: registry.lpbk-bethel.de/sahib:latest
+    image: hmtx/sahib:latest
     command: bundle exec puma
     volumes:
       - ./plugins:/app/plugins
+      - ./config:/app/config
     ports:
       - "80:9393"
     depends_on:
       - pdf
+      - db
     env_file:
       - config/${DATENBANK:-beispiel}.env
-
   pdf:
-    image: registry.lpbk-bethel.de/pdf:latest
+    image: hmtx/electron_pdf:latest
+  db:
+    image: hmtx/mariadb:latest
