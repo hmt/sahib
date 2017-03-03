@@ -1,154 +1,258 @@
 # sahib
-`sahib` ist eine grafische Oberfläche für Schild-Datenbanken. Schild ist das offizielle Schulverwaltungssystem in NRW.
 
-Jetzt gleich testen unnter [sahib.hmt.im](http://sahib.hmt.im). Die Daten sind Testdaten der Fa. Ribeka.
+`sahib` ist ein Report-Werkzeug für Schild und kann den in Schild integrierten Report-Designer vollständig ersetzen. Die Arbeitsweise von `sahib` unterscheidet sich jedoch grundlegend und spricht möglicherweise nur einen Teil der Schild-Benutzer an. Schild ist das offiziell vom Land NRW unterstützte Schulverwaltungssystem für alle Schulformen.
 
-Im Gegensatz zu Schild ist `sahib` quelloffen und kann jederzeit angepasst werden. Es baut auf die [`schild`-Bibliothek](https://github.com/hmt/schild) auf und kann prinzipiell auf alle in Schild zur Verfügung stehenden Daten zugreifen. Diese Daten können ausgelesen und mit Hilfe von `sahib` formatiert im Browser dargestellt und in PDF umgewandelt werden.
+## Eigenschaften
+Im Gegensatz zu Schild ist `sahib` quelloffen und kann jederzeit angepasst werden. Eine frei zugängliche Kopie des Programms ist unter [https://github.com/hmt/sahib](https://github.com/hmt/sahib) einsehbar und enthält die aktuellen Installationshinweise und geprüfte Versionen. Auch wenn nicht immer tagesaktuelle Änderungen sichtbar sind, wird `sahib` regelmäßig erweitert und seit 2014 aktiv an einem BK eingesetzt.
 
-`sahib` ersetzt Schild nicht, bietet aber die Möglichkeit, alternativ Dokumente zu erstellen. Im Gegensatz zum Formulardesigner, der in Schild eingebaut ist, kann `sahib` auf viele Bibliotheken aus der professionellen Webentwicklung zurückgreifen, die bereits lange erprobt und dokumentiert sind. Die Erzeugung hochwertiger PDF-Dokumente in `sahib` wird ausschließlich über HTML und CSS gesteuert.
+## Vorteile
+`sahib` ist ein Report-Werkzeug, das auf die Schild-Datenbank direkt zugreift und dadurch die Daten beliebig verarbeiten kann. Im Gegensatz zum Report-Designer von Schild, verwendet `sahib` HTML-Reports zum Erstellen von Dokumenten. Diese Dokumente können dadurch im Browser angeschaut oder als PDF zum Drucken und Archivieren verwendet werden.
 
-## Funktionsweise von sahib
-`sahib` baut auf moderne Webtechnologien, die unabhängig ständig weiter entwickelt und gepflegt werden. `sahib` ist im Prinzip nur eine Schnittstelle zwischen Schild und Dokument, die für die Abfrage der Daten aus der Schild-Datenbank zuständig ist und dafür sorgt, dass die Dokumente alle notwendigen Daten bekommen.
+Daraus ergeben sich mehrere praktische Vorteile, die im folgenden näher erläutert werden sollen.
 
-Sofern Schild eine MySQL-Datenbank (oder andere externe Datenbank) verwendet, auf die `sahib` zugreifen kann, steht einem Einsatz nichts im Weg.
+HTML-Reports lassen sich relativ einfach erstellen. Es sind im Prinzip ganz normale Web-Seiten, die jedoch Platzhalter für Name, Klasse, etc. verwenden. Da als Unterbau für `sahib` die Programmiersprache Ruby verwendet wird, können neben einfachen Platzhaltern auch komplexe Funktionen in die Reports eingebaut werden, die jede beliebige Schleife, Abfrage und sonstiges verwirklicht. Alle Informationen, die zusammen ein Dokument ergeben, können mit einem einzigen Textdokument erstellt werden und benötigen keine Subreports. Um Funktionen wiederholt verwenden zu können, werden sog. _Partials_ verwendet.
 
-`sahib` läuft als Webanwendung im Browser und greift direkt auf die Schild-Datenbank zu. Es erwartet eine Anmeldung mit dem Schild-Benutzernamen.
+Ebenfalls können für diese HTML-Reports praktisch alle Grafikformate verwendet werden, die im Browser dargestellt werden können. Dies ist insbesondere für die Verwendung von Logos praktisch, da hier die frei skalierbaren SVG-Grafiken zum Einsatz kommen können, die in beliebiger Größe immer perfekt aussehen und scharfe Konturen bilden. Ein Format, das der Report-Designer in Schild nicht zulässt.
 
-Die Benutzerschnittstelle ist ein Suchfenster, in dem man nach Schülern oder Klassen suchen kann.
+HTML ist ein gängiger Standard und kann mittels CSS perfekt gesteuert werden. Selbst ohne umfangreiche Anpassungen werden einfache Dokumente gut aussehen und es gibt keine verzerrten oder gestauchten Absätze mehr. Auch die Lücken zwischen Fließtext und Platzhaltern gehören der Vergangenheit an. Alle Elemente auf der Seite können individuell platziert werden und ermöglichen ein gleichmäßiges Erscheinungsbild.
 
-Wird aus dem Dropdown-Menu eine Klasse oder ein Schüler ausgewählt, erscheint die Klassen- oder Schüleransicht mit allgemeinen Informationen.
+Es können alle verfügbaren Fonts verwendet werden und der Browser kümmert sich von selbst um die richtige Einstellung der Textabstände. Es ist kein manuelles Verschieben mehr notwendig. Auch muss nicht mühsam mit der Maus ein Element platziert werden, alle Anweisungen werden mit Hilfe von CSS konkretisiert und sollte es mal schwerfallen, ein Element richtig zu platzieren, dann können die umfangreichen Enwicklerwerkzeuge im Browser verwendet werden, um Fehler im erstellten Dokument zu finden. Und das ohne zwischen Report und Vorschau zu wechseln.
 
-Zwei Knöpfe ermöglichen die Auswahl eines bestimmten Abschnitts (oder Halbjahr) und eines Dokuments. Wie in Schild muss zunächst das Jahr und der Abschnitt gewählt werden, damit passend dazu ein Dokument erzeugt werden kann.
+HTML und CSS sind im Internet hervorragend dokumentiert und sind international standardisiert. Viele Bibliotheken erleichtern es zusätzlich, besondere Effekte zu erzeugen oder auf erprobte Lösungen zurückzugreifen.
 
-Je nach Schulform oder Bildungsgang kann nun ein Dokument ausgewählt und angezeigt werden. Entsprechend der Datenlage folgen Warnmeldungen oder die vollständige Anzeige des Dokuments. Ebenso besteht die Möglichkeit der PDF-Erzeugung. Alle Dokumente können als Klassensatz oder für einzelne Schüler erzeugt werden.
+Ein weiterer Vorteil von textbasierten Reports ist die Möglichkeit des Austauschs. Reports können problemlos verschickt und ausprobiert werden, Fehler werden sofort im Browser angezeigt. Ebenso können Textdateien mit Hilfe von Werkzeugen wie git versioniert werden, d.h. mehrere Versionen des gleichen Reports können übereinander gesichert werden, ohne dass vorherige Versionen dabei verloren gehen.
 
-`sahib` liefert eine Reihe von Standard-Formularen mit, die angepasst oder neu geschrieben werden können. Sie sind im repository unter `dokumente` einzusehen.
+Da einige Elemente der verschiedenen an der Schule zu erzeugenden Dokumente recht hohe Ähnlichkeiten aufweisen, besteht die Möglichkeit sogenannte Partials zu verwenden. Partials sind kleine Schnipsel, die von mehreren Reports gleichzeitig verwendet werden können ohne den gleichen Abschnitt jedes Mal neu zu schreiben. So bietet es sich z.B. an, die Notentabelle in verschiedenen Zeugnissen zu nutzen und dabei nur einmal zu schreiben. Ebenso können Textschnipsel von mehreren Reports geteilt werden, die häufig in Dokumenten erscheinen, z.B. die Hinweise auf Notenstufen, Rechtsmittel etc.
 
-Dokumente verwenden unter `sahib` die Templatesprache [slim](http://slim-lang.com/), die einen vereinfachten HTML-Syntax verwendet:
+Unter den gegebenen Voraussetzungen wird hoffentlich deutlich, dass `sahib` anders ist und möglicherweise Einstiegshürden aufstellt. Mit zunehmendem Dokumentenaufkommen verringert sich jedoch der Aufwand und neue Reports lassen sich immer schneller erstellen. Sobald ein Pool von Reports besteht, auf den zurückgegriffen werden kann, ist das Ändern oder Erstellen neuer Reports eine Aufgabe von wenigen Minuten. Kopieren eines ähnlichen Reports, ändern der wesentlichen Inhalte und optische Anpassungen. Damit ist der neue Report sofort einsatzbereit. Grundsätzlich kann der Report während der Erstellungsphase bereits im Browser betrachtet und korrigiert werden.
 
-```html
-<b>fetter Text</b>
-normaler Text
-<table>
-  <tr>
-    <td>
-      eine Tabelle
-    </td>
-    <td>
-      mit ein bisschen Text
-    </td>
-  </tr>
-</table>
+## Templates
+Dokumente werden, wie oben erwähnt, mit Hilfe von HTML-Reports erstellt, die ein Gerüst erstellen und anschließend mit Daten aus der Schild-Datenbank auffüllen. Diese Reports sind technisch gesehen keine reinen HTML-Dateien, da sie den Steuercode für die Platzhalter, Schleifen und Abfragen enthalten. Sie sind ihnen aber sehr ähnlich und kompatibel. D.h. ein korrektes HTML-Dokument wird immer auch korrekt dargestellt.
+
+Die nachfolgende Designentscheidung für `sahib` mag dem Autor praktisch erscheinen, anderen evtl. nicht und lässt sich bei interessierter Nachfrage grundsätzlich relativ schnell erweitern und sollte daher kein Hinderungsgrund zum Einsatz von `sahib` darstellen.
+
+Die Reports verwenden kein reines HTML sondern eine Template-Sprache namens [slim](http://slim-lang.com/). Slim unterscheidet sich wesentlich von _normalem_ HTML, da grundsätzlich nur öffnende Tags verwendet werden und Verschachtelungen mit Hilfe von Leerzeichen erzeugt werden. Der Vorteil ist ein wesentlich leichter zu lesender Reports und keine eckigen Klammern. Ebenfalls ist slim für den Einsatz von Steuercodes optimiert. Allerdings ist es auch in slim möglich, reguläres HTML zu verweden, das aber nicht besonders sinnvoll ist.
+
+## Systemvoraussetzungen
+`sahib` kann auf zwei Arten ausgeführt werden. Zum einen kann man `sahib` als einfaches Script ausführen oder aber die Containerlösung verwenden, die üblicherweise zu empfehlen ist und im folgenden beschrieben wird.
+
+`sahib` wurde ausführlich unter verschiedenen Linux-Distributionen getestet und läuft ohne Einschränkungen auch auf älteren Systemen relativ schnell. Geschwindigkeit orientiert sich hierbei an der Erzeugung von Dokumenten im Vergleich zum Report-Designer unter Schild. Mehrere hundert Seiten Dokumente lassen sich selbst auf einfacher Hardware in wenigen Sekunden als PDF erzeugen und anzeigen. Das Ergebnis ist jedefalls deutlich schneller als Schild auf vergelichbarer Hardware.
+
+Damit die Containerlösung mit Docker verwendet werden kann, muss ein 64-Bit Linux vorhanden sein, theoretisch sollte auch Windows oder MacOS als Host-System möglich sein, wurde aber bisher auf Grund mangelnder Hardware nicht getestet.
+
+Ebenfalls muss der verwendete Rechner Zugriff auf die von Schild verwendete MySQL-Datenbank haben, damit die Daten abgefragt werden können. Ein einfacher Lesezugriff ist ausreichend, `sahib` selbst führt keine Schreibzugriffe auf die Datenbank aus.
+
+Ebenfalls sollte der Rechner, wenn `sahib` von mehreren Rechnern aus genutzt werden soll, am Netzwerk angeschlossen sein, damit alle Schild-Benutzer Zugriff auf die Dokumente haben. Ansonsten kann `sahib`  nur vom jeweiligen Rechner aus verwendet werden. Grundsätzlich ist `sahib` für den Serverbetrieb vorgesehen.
+
+## Technische Grundlagen
+`sahib` ist ein [Ruby](https://ruby-lang.org)-Script, das einen HTTP-Server startet und lediglich die Suche von bestimmten Schülergruppen unterstützt. Es können entweder einzelne Schüler  oder Klassen gesucht und angezeigt werden. Das ist die absolute Grundausstattung und alle weiteren Eigenschaften werden über Erweiterungen bzw. Reports eingebunden.
+
+`sahib` baut auf das [`schild`-Gem](https://github.com/hmt/schild) auf und kann prinzipiell auf alle in Schild zur Verfügung stehenden Daten zugreifen. Als Unterbau dient [sinatra](https://github.com/sinatra/sinatra), ein Mikro-Framework für Webanwendungen. Momentan beschränken sich die verfügbaren Daten auf Tabellen, die für das BK relevant sind. Weitere Tabellen können jedoch problemlos hinzugefügt werden, wenn dies gewünscht wird. Bisher wurde aus Mangel an Einsatzgebieten darauf verzichtet.
+
+## Installation
+Es wird zwischen zwei möglichen Installationsarten unterschieden, zum einen mit Hilfe von Docker-Containern, zum anderen über eine eigene Laufzeitumgebung. Beide Methoden werden näher beschrieben.
+
+Werden Docker-Conainer verwendet, reduziert sich die vorausgehende Arbeit erheblich, ist also zu empfehlen.
+
+Insgesamt ist es jedoch praktisch eine gemeinsame Grundlage zu schaffen, damit unter Umständen beide Methoden gleichwertig benutzt werden können, was durchaus vorteilhaft ist. Mehr dazu in den beiden Abschnitten.
+
+`sahib` verwendet Konfigurationsdateien, um zwischen verschiedenen Umgebungen unterschiedliche Einstellungen zuzulassen. Dies kann nützlich sein, um z.B. mehrere Schild-Datenbanken zu verwalten oder eigene Testumgebungen zu entwerfen. Wichtig ist jedoch zu wissen, dass `sahib` mit nur jeweils einer Datenbank pro Instanz läuft und für den Datenbankwechsel mit neuen Konfigurationsdateien gestartet werden muss. 
+
+Im `sahib`-Repository mit dem Quellcode befinden sich bereits Standardeinstellungen, die als Grundlage verwendet werden sollten.
+
+Dazu bietet es sich an, das `sahib`-Repository zu klonen, um alle Standardeinstellungen und Verzeichnisse fertig eingerichtet zur Verfügung stehen zu haben:
+
+```bash
+git clone https://github.com/hmt/sahib.git
 ```
 
-kann in slim auch so geschrieben werden:
-```slim
-b fetter Text
-|normaler Text
-table
-  tr
-    td eine Tabelle
-    td mit ein bisschen Text
+Dazu sollte man auf dem System [git](https://git-scm.com/) installiert haben. Das ist insbesondere im Hinblick auf weitere Updates sinnvoll. Zum Testen reicht allerdings auch eine Downloadversion, die [hier](https://github.com/hmt/sahib/archive/master.zip) verfügbar ist.
+
+Im `sahib`-Verzeichnis befinden sich nun alle benötigten Dateien, die nun für die entsprechende Installationsmethode angepasst werden müssen.
+
+**WICHTIG**
+Für Testzwecke ist `sahib` vollständig eingerichtet und kann direkt über Docker gestartet werden. Die Konfigurationsdatei sollte dann nicht geändert werden.
+
+Sobald der eigene Datenbankserver mit den _echten_ Schild-Daten verwendet werden soll, muss eine `*.env`-Datei angelegt werden, hier soll sie `beispiel.env` heißen und befindet sich im `config`-Verzeichnis.
+
+```bash
+# config/beispiel.env
+
+# Der Adapter wird bestimmt durch die von Schild
+# verwendete Datenbank. Meist MySQL, deshalb
+# 'mysql2' beibehalten
+S_ADAPTER=mysql2
+
+# Der Host-Eintrag ist die Adresse der Datenbank
+# im Netzwerk. Kann eine IP sein oder 'localhost',
+# wenn die DB sich auf dem gleichen Rechner
+# befindet. Bei Docker muss die Host-IP verwendet 
+# werden, 'localhost' verweist sonst auf die IP
+# des sahib-Containers. Standardeinstellung ist 'db'
+# und verweist auf den Datenbank-Container mit der
+# Testdatenbank, die automatisch zum Einsatz kommt,
+# wenn man docker-compose verwendet.
+S_HOST=db
+
+# Name der Schild-Datenbank
+S_DB=schild-test
+
+# Name des Datenbank-Benutzers. Nicht autmatisch
+# identisch mit den Schild-Benutzern
+S_USER=schild
+
+# Das Passwort zur Schild-Datenbank
+S_PASSWORD=schild
+
+# sahib-Einstellungen
+# Diese Einstellung gewährt allen Benutzer von
+# Sahib Zugriff auf die Erweiterungseinstellungen
+# bzw. anderer Einstellungen, die evtl hinzukommen.
+# Muss zum ersten Einrichten 'true' sein.
+S_REPO_ADMIN=true
+
+# Dies ist die Datenbank der weiteren
+# Einstellungen, die sahib anlegt. Z.B. Ort des
+# Erweiterungs-Verzeichnisses oder Adresse der
+# Erweiterungen. Wird anschließend als *.db Datei
+# gesichert
+DATENBANK=beispiel
 ```
 
-Es entfallen die vielen Klammern und es wird lesbarer. Ein weiterer Vorteil ist dynamischer Inhalt, der natürlich beim Einsatz von dynamischen Dokumenten unablässig ist.
+Damit ist die erste Grundlage gelegt, eine der beiden folgenden Methoden sollte nun ausgewählt werden.
 
-So ist z.B. der Kopf eines Zeugnisses so formuliert:
-```slim
-    b #{s.anrede} #{s.vorname} #{s.name}
-    br /
-    |geboren am #{(s.geburtsdatum).strftime("%d.%m.%Y")} in #{s.geburtsort}
-    br /
-    'war vom #{s.beginn_bildungsgang.strftime("%d.%m.%Y")} bis zur Aushändigung des Zeugnisses
+### Docker (empfohlen)
+Docker ist laut [Wikipedia](https://de.wikipedia.org/wiki/Docker_(Software)):
+
+> eine Open-Source-Software, die dazu verwendet werden kann, Anwendungen mithilfe von Betriebssystemvirtualisierung in Containern zu isolieren. Dies vereinfacht einerseits die Bereitstellung von Anwendungen, weil sich Container, die alle nötigen Pakete enthalten, leicht als Dateien transportieren und installieren lassen. Andererseits gewährleisten Container die Trennung der auf einem Rechner genutzten Ressourcen, sodass ein Container keinen Zugriff auf Ressourcen anderer Container hat.
+
+Sobald Docker auf dem System läuft, ist es relativ einfach, `sahib` zu installieren und es besteht eine hohe Sicherheit, dass `sahib` wie vorgesehen funktioniert und die erzeugten PDF mit der erwarteten Qualität ausgestattet sind.
+
+Docker wird auf den unterschiedlichen Distributionen unterschiedlich installiert. Die gängigen Distributionen wie Ubuntu, Fedora, Arch etc werden jedoch standardmäßig unterstützt und bieten aktuelle Versionen. Bitte informieren Sie sich [hier](https://www.docker.com/products/overview#/install_the_platform), wie Sie Docker auf Ihrem System installieren können. Beachten Sie, dass `sahib` bisher nur auf Linux getestet wurde. Möglicherweise läuft `sahib` auch auf Windows oder Mac. Probieren Sie es selber aus und schreiben Sie ein [Feedback](https://github.com/hmt/sahib/issues).
+
+`sahib` verwendet drei Container, wenn PDF erzeugt werden sollen. Ein Container für `sahib` selbst, das unter Ruby läuft, ein Container für den PDF-Renderer, der unter Node läuft und nur für das Erzeugen der PDF zuständig ist sowie ein Datenbank-Container mit einer MariaDB-Instanz, die auch die Testdatenbank beinhaltet. Da alle Container voneinander abhängig sind, bietet es sich an, docker-compose zu verwenden, ein Werkzeug, das Container "orchestriert", also in der richtigen Reihenfolge mit den passenden Parametern startet.
+
+Zur Installation schauen Sie bitte auf folgender [Seite](https://docs.docker.com/compose/) und folgen den Anweisungen (meist nur ein Einzeiler unter Linux).
+
+Sobald docker und docker-compose installiert sind, muss sichergestellt werden, dass die oben angegebene Konfigurationsdatei angelegt wurde, damit `sahib` eine Verbindung zur Schild-Datenbank aufbauen kann. Anschließend kann sie mit Hilfe der `docker-compose.yml`-Datei verwendet werden, die sich bereits im `sahib`-Verzeichnis befindet:
+
+```yaml
+# docker-compose.yml
+version: '2.1'
+services:
+  sahib:
+    image: hmtx/sahib:latest
+    command: bundle exec puma
+    volumes:
+      - ./plugins:/app/plugins
+      - ./config:/app/config
+    ports:
+      - "80:9393"
+    depends_on:
+      - pdf
+      - db
+    env_file:
+      - config/${DATENBANK:-beispiel}.env
+  pdf:
+    image: hmtx/electron_pdf:latest
+  db:
+    image: hmtx/mariadb:latest
 ```
-Dabei ersetzt slim automatisch den eingebundenen Ruby-Code, der sich zwischen den `#{}` aufhält. Geübten Programmierern fällt auf, dass hier interpolierten Strings zum Einsatz kommen.
 
-Da die meisten Dokumente auf zwei Objekten aufbauen, dem Schüler- und dem Abschnittsobjekt, gestaltet sich die dynamische Abfrage recht komfortabel. Über `s.ein_datenbankfeld` lassen sich alle Informationen aus der Datenbank abrufen, inklusive einiger Hilfsmethoden, wie z.b. die Anrede, Geschlecht oder auch die Fachklasse etc. Es empfiehlt sich die Dokumente genauer anzuschauen und damit zu experimentieren.
+In der mitgelieferten `docker-compose.yml` wird das lokale `plugins`-Verzeichnis verwendet, um Erweiterungen dauerhaft lokal zu speichern. Daten, die innerhalb von Docker-Containern gespeichert werden, werden beim nächsten Container-Start gelöscht und müssen deshalb als externe Daten in den Container mit eingebunden werden. Gleiches gilt auch für die Einstellungen, die über das `config`-Verzeichnis zur Verfügung gestellt werden werden.
 
-Alle Dokumente, die im Dokumentenordner angelegt werden, sollten in der Datei `config/doc_einstellungen.yml` angemeldet werden, damit sie sich problemlos in `sahib` einfügen und entsprechend der eigenen Vorgaben nur für bestimmte Gruppen verwendet werden können. Ebenso können Einschränkungen zum verwendeten Zeitraum angegeben werden, Logos dynamisch eingebunden werden etc.
+Für die Verwendung der Testdatenbank sollten alle Einträge beibehalten werden. Falls eine eigene `*.env`-Datei mit Zugangsdaten zu einer anderen Datenbank angelegt wurden, muss eine weitere `yml`-Datei angelegt werden, damit auf die richtigen Umgebunsvariablen zugegriffen wird:
 
-Da die Dokumente in HTML und CSS angelegt werden, kann auf eine Vielzahl von CSS-Bibliotheken zurückgegriffen werden, die hochwertige Typografie liefern und moderne Grid-Verfahren anbieten. Exaktes Positionieren von Elementen ist kein Wunsch mehr, es ist möglich.
-
-In den eingebundenen Dokumenten wird die [Bootstrap-Bibliothek](http://getbootstrap.com/) verwendet, die ständig weiterentwickelt wird und hochwertiges Design liefert, das nicht nur für das Web geeignet ist. Grids lassen mehrspaltiges Positionieren von Text und Elementen problemlos zu und ermöglichen ein schnelles Arbeiten.
-
-Da `sahib` auf Webtechnologien aufbaut und moderne Browser eine Vielzahl von Formaten unterstützen, kann in den Dokumenten ohne Probleme auf Vektorgrafiken zurückgegriffen werden. Frei skalierbare Logos sind kein Problem mehr und Pixel beim Druck von Zeugnissen gehören der Vergangenheit an.
-
-Zur Erzeugung der PDF wird ebenfalls ein Browser auf dem Server verwendet. Die Bibliothek [slimer.js](https://slimerjs.org/) startet auf dem Server eine Firefox-Instanz und druckt im Hintergrund ein PDF, das am Browser wieder ausgegeben wird. Damit kann man sichergehen, dass am Bildschirm und auf dem Drucker identische Ergebnisse geliefert werden.
-
-Da im Browser alle Daten schon in endgültiger Fassung angezeigt werden und alle Dokumente aus HTML und CSS bestehen, kann auch direkt im Browser mit Hilfe der Entwicklerwekzeuge nach Fehlern gesucht und Feineinstellungen vorgenommen werden. Es muss nicht geraten werden, welche Einstellung verändert werden muss, im Browser kann direkt verändert und angepasst werden bei gleichzeitiger Ansicht des Ergebnisses. Das macht auch die Erstellung komplizierter Dokumente sehr komfortabel.
-
-## Installations
-Zwei Installationsmöglichkeiten stehen zur Auswahl, einmal über Docker und einmal von Hand. Die Installation mit Docker ist leider noch nicht dokumentiert und es steht auch noch kein Image bereit. Wer sich auskennt, `slimerjs` muss beim letzten `COPY` relativ zu `sahib` mit eingebunden werden, sonst fehlt es.
-
-Um `sahib` von Hand zu installieren, sollte es als git-Repository heruntergeladen werden, damit es leicht zu aktualisieren bleibt. Dazu sollte [git](https://git-scm.com) installiert sein. Ebenso wird die Programmiersprache [Ruby](https://ruby-lang.org) erfordert, da `sahib` ein Ruby-Script ist. Sobald vorhanden, kann es losgehen
-
-```sh
-git clone git@github.com:hmt/sahib.git
+```bash
+# docker-compose.andere.yml
+version: '2.1'
+services:
+  sahib:
+    env_file:
+      - config/andere.env
 ```
+
+Anschließend kann `sahib` gestartet werden:
+
+`sudo docker-compose up`
+
+oder wenn eine weitere `docker-compose`-Datei angelegt wurde:
+
+`sudo docker-compose -f docker-compose.yml -f docker-compose.andere.yml up`
+
+Über diesen Befehl wird Docker angewiesen, die oben angegeben Container aus dem Docker-Hub zu ziehen und zu starten. In der Kommandozeile werden die drei Containerstati mit verschiedenen Farben angezeigt; nach wenigen Sekunden ist `sahib` per Browser unter [http://localhost](http://localhost) erreichbar. Von anderen Rechnern im Netzwerk muss die Adresse des ausführenden Rechners benutzt werden.
+
+### Eigene Laufzeitumgebung
+
+`sahib` sollte als git-Repository heruntergeladen werden, damit es leicht zu aktualisieren bleibt. Dazu sollte [git](https://git-scm.com) installiert sein. Ebenso wird die Programmiersprache [Ruby](https://ruby-lang.org) erfordert, da `sahib` ein Ruby-Script ist. Sobald vorhanden, kann es losgehen. Zum installieren von Ruby kann man einen Versionsmanager verwenden, der Ruby bequem im eigenen Benutzerverzeichnis installiert oder man verwendet das vom System vorgegebene Ruby. Praktischer ist meistens ein Werkzeug wie [ruby-install](https://github.com/postmodern/ruby-install) mit [chruby](https://github.com/postmodern/chruby) oder [rvm](https://rvm.io/). Damit alle benötigten Bibliotheken installiert werden können, wird `bundler` installiert:
+
+`gem install bundler`
 
 Anschließend alle nötigen Gems installieren:
 
-```sh
-cd sahib
-bundle install
-```
+`bundle install`
 
-Um `sahib` zu starten wird erwartet, dass eine Schild-Datenbank eingerichtet und zugänglich ist. Dazu müssen in die Datei `config/env_init.yml` alle nötigen Daten eingetragen werden.
-
-```sh
-development:
-  S_ADAPTER: mysql2
-  S_HOST: 192.168.178.55
-  S_USER: schild
-  S_PASSWORD: schild_passwort
-  S_DB: schild_db
-  SLIMERJSLAUNCHER: /usr/bin/firefox
-  SLIMER_SSL_PROFILE: /home/sahib/.innophi/slimerjs/ulakm.AllowSSL
-```
+Falls Fehlermeldungen auftauchen, liegt es meist an fehlenden Abhängigkeiten, um native Bibliotheken zu kompilieren. Dazu gibt es meist für die jeweilige Linux-Distribution ein besonderes Paket. Für die Datenbankanbindung werden MySQL/Mariadb- und Postgresql-Clients benötigt, deren Pakete sicht jedoch im Namen bei jeder Distribution unterscheiden.
 
 Sobald alles vorbereitet ist, kann der Server gestartet werden:
 
-```sh
-puma
-```
+`eval $(cat config/beispiel.env) bundle exec puma`
 
-Der Puma-Server startet auf Port 9292 und `sahib` kann im Browser unter [http://localhost:9292](http://localhost:9292) erreicht werden. Wenn alles geklappt hat, stehen nun alle eingetragenen Schüler zur Verfügung.
+Dieser etwas außergewöhnliche Befehl erfüllt mehrere Aufgaben gleichzeitig. Erst lädt die Shell zum Ausführen der folgenden Befehle die `beispiel.env`-Datei, evaluiert die darin angegeben Variablen als Systemvariablen und stellt sie somit `sahib` zur Verfügung, d.h. `sahib` kann auf die Datenbankangaben mit Hilfe der Systemvariablen zugreifen. Anschließend wird über bundler und den installierten Bibliotheken der Puma-Server ausgeführt, der `sahib` startet und als lokale Web-Anwendung zur Verfügung stellt.
 
-Für die Erzeugung der PDF wird ein PDF-Renderer vorausgesetzt. Sahib
-verwendet `slimer.js`, das auf Firefox zurückgreift. Es müssen also
-beide Programme installiert und erreichbar sein. Auf einem Server bietet
-es sich also an, z.B. xvfb-run zu installieren (Linux), damit man
-headless arbeiten kann, d.h. keine grafische Oberfläche zum Starten von
-Firefox braucht.
+Der Puma-Server startet auf Port 9393 und `sahib` kann im Browser unter [http://localhost:9393](http://localhost:9393) erreicht werden. Wenn alles geklappt hat, stehen nun alle eingetragenen Schüler zur Verfügung.
 
-## Hinweis
-Sahib ist nur ein weiteres Beispiel zur Nutzung des `schild`-Gems. Weitere Dokumente können entworfen und dem Repository hinzugefügt werden. `sahib` wird an einem Berufskolleg genutzt, möglicherweise haben andere Schulformen andere Bedürfnisse. In den meisten Fällen lassen sich `sahib` und `schild` recht schnell erweitern.
+Beendet werden kann `sahib` mit der Tastenkombination Strg-c.
 
-Da meines Wissens in Schild die Bildungsgänge und die Bezeichnungen der erlangten Abschlüüse nicht eingetragen sind, können diese in einer weiteren yaml-Datei hinterlegt und bei Bedarf ausgelesen werden. Dazu bitte `config/strings.yml` anschauen.
+## `sahib` benutzen
+Nach dem erfolgreichen Start von `sahib` kann im Browser alles weitere erledigt werden. Die Oberfläche ist absichtlich minimal gehalten und bietet nur die nötigsten Buttons und Eingabefelder.
 
-Als Unterbau für `sahib` dient [sinatra](https://github.com/sinatra/sinatra), ein Mikro-Framework für Webanwendungen.
+### Schüler finden und Dokumente erzeugen
+Die _Startseite_ bietet praktisch nur ein Engabefeld zur Suche von Schülern, bzw. Klassen. Beides wird bei Beginn der Eingabe direkt als Treffer zurückgemeldet, verschiedene Symbole markieren aktive Schüler, ausgeschulte oder Abgänger. Klassen werden mit der jeweiligen Jahreszahl versehen. Sobald man einen Treffer auswählt, wird der Treffer in der Einzel- oder Gruppenansicht dargestellt. Einzelne Schüler können auch in ihrer Klasse dargestellt werden, ebenso kann in einer Gruppensansicht ein einzelner Schüler zur Einzelansicht angezeigt werden.
+
+Sind Reports eingerichtet, kann mit Hilfe der Dokumenten-Taste ein neues Dokument erstellt werden, aus dem heraus dann zusätzlich ein PDF erzeugt werden kann. Da die Erstellung von PDF etwas rechenintensiver ist, wird immer erst eine _einfache_ HTML-Darstellung angezeigt, die grundsätzlich mit der PDF-Darstellung übereinstimmen sollte. Da jeder Rechner aber andere Font-Einstellunge hat, kann es u.U. sein, dass die beiden Darstellungen voneinander abweichen. Wichtig ist jedoch, dass bei der Verwendung der Docker-Container die PDF-Ezeugung grundsätzlich auf allen Systemen identisch funktioniert und gleiche Ergebnisse bei gleichen Daten geliefert werden, unabhängig vom eingesetzten System.
+
+Damit die Dokumente erzeugt werden können, müssen Reports zur Verfügung gestellt werden.
+
+## Reports in Sahib einbinden
+`sahib` liefert keine eigenen Reports mit, da es im Prinzip nicht möglich ist, Reports zu erstellen, die für alle Schulen gültig sind. Änderungen müssen praktisch immer vorgenommen werden, auch wenn es nur die eingebundenen Logos sind.
+
+Das Einbinden von Reports gestaltet sich jedoch relativ leicht, wenn man bereit ist, sich mit dem Erweiterungssystem von `sahib` auseinanderzusetzen.
+
+Im oberen Menu der Browser-Ansicht befindet sich das  Einstellungssymbol mit dem Zahnrad, hinter dem sich der Punkt _Erweiterungen_ befindet.
+
+Auf der Erweiterungsseite bietet sich die Möglichkeit Erweiterungen/Reports mit Hilfe von lokalen Verzeichnissen bzw. als git-Repositories einzubinden.
+
+Lokale Verzeichnisse sind für `sahib` über das Dateisystem erreichbar, könnte dementsprechend auch ein entfernt eingebundenes Laufwerk im Netzwerk sein, bietet sich jedoch eher für ein auf dem selben Rechner befindliches Verzeichnis an, an dem eigene Dokumente erstellt, bzw. bearbeitet werden, da sie automatisch aktuell sind und sofort in `sahib` zur Ansicht zur Verfügung stehen.
+
+git-Repositories sind meistens entfernt abgelegte Dokumente, die z.B. per Internet erreichbar sind und besonders dann praktisch sind, wenn auf dem einen Rechner Reports entwickelt und geprüft werden, anschließend mit dem git-Repository abgeglichen werden und dann den `sahib`-Nutzern zur Verfügung gestellt werden. Ebenso können git-Repositories über öffentliche Quellen mit anderen Nutzern ausgetauscht werden. Viele Reports unterscheiden sich in den schulischen Bedürfnissen nur minimal und können mit wenigen Handgriffen an die eigenen Vorstellungen angepasst werden.
+
+Mit der Eingabe einer lokalen- bzw. einer git-Adresse wird noch ein Name erwartet, unter dem die Dokumente angezeigt werden. Dazu bietet sich z.B. das Jahr an, wenn man jährlich andere Reports verwendet oder Reports für bestimmte Situationen.
+
+Sobald die Reports gefunden und eingebunden wurden, stehen sie den Nutzern zur Verfügung. 
+
+Wird ein Report-Verzeichnis/Repository für einige Zeit nicht benötigt und die Reportauswahl wirkt unübersichtlich, dann kann durch ein Klick auf das Auge die Darstellung ausgeblendet werden.
+
+Ein Demo-Repository für Reports ist hier verfügbar:
+
+`https://github.com/hmt/demo-reports.git`
+
+Unter Erweiterungen `git-Erweiterung` wählen, Repository-URL eintragen und als Namen z.B. `Demo` auswählen. `sahib` prüft die Verfügbarkeit und bindet unter `Speichern` die Erweiterung endgültig ein. Der Server wird daraufhin neu gestartet und in der Schüler- bzw. Klassenauswahl können nun die neuen Dokumente erzeugt werden.
+
+## Reports erstellen
+Anders als der von Schild mitgelieferte Report-Designer hat `sahib` keinen eigenen Editor zum bearbeiten der Reports. Da es sich bei den Reports um Textdateien handelt, die praktisch von Hand erstellt werden können, ist dies in den meisten Fällen auch kein Problem.
+
+`sahib` kann theoretisch jedes beliebige HTML-Dokument sein, aber in erster Linie steht sicherlich die Erzeugung von schulrelevanten Dokumenten im Vordergrund. Zeugnisse, Bescheinigungen und Listen für den Alltag. Gemein ist allen, dass sie als PDF archivierbar sind und sich problemlos drucken lassen.
+
+Wesentliches Merkmal ist also, dass die erzeugten Dokumente in den meisten Fällen auf A4 bzw. A3 ausgegeben werden. Dazu bietet CSS die `@media`-Anweisung, die von `sahib`-Reports praktisch universell genutzt wird. Hiermit werden den Reports die passenden Maße für erzeugende Dokumente mitgeteilt und anschließend ausgegeben.
+
+Alles, was auf die somit erzeugten Flächen passt, wird seitenweise ausgegeben, bzw. verlässt den Seitenrand. Ein automatisches Umbrechen findet nicht statt, es sei denn, es wird so per CSS angewiesen. Das hat den Vorteil, dass Benutzer die volle Kontrolle über die Seitengestaltung behalten und nicht mit frühen Seitenumbrüchen konfrontiert werden.
+
+Die meisten in der Entwicklungsphase zum Einsatz kommenden Reports verwenden neben den generellen Anweisungen zur Seitenerstellung noch die CSS-Bibliothek [Bootstrap](https://getbootstrap.com/), die es ermöglicht, sog. Grids u verwenden, also ein mehrspaltiges Layout, um Seiten oder Dokumente über bis zu 12 Spalten zu gestalten. Was ursprünglich nur für Internetseiten gedacht war, lässt sich hervorragend auch für `sahib`-Reports nutzen. Ein System, das auch im Print-Bereich genutzt wird. Damit lassen sich Elemente auf einem Dokument gleichmäßig positionieren, ohne dass man sich viel Gedanken über absolute Positionen machen muss. Das CSS positioniert alle Elemente automatisch an der optimalen Stelle.
+
+Es ist bei der Neugestaltung von Reports sinnvoll auf bereits existierende Vorlagen zurückzugreifen und lediglich anzupassen. Die meisten Einstellungen in den CSS-Dateien sind dabei erprobte Hilfen für die Erstellung von Reports.
+
+Im Demo-Repository sind einige Reports verzeichnet, die einen ersten Eindruck verschaffen. Nähere Informationen zum Erstellen von eigenen Reports werden an dieser Stelle ergänzt.
 
 ## Lizenz
-[sahib](https://github.com/hmt/sahib) von [HMT](https://github.com/hmt) ist lizenziert unter der MIT-Lizenz.
-
-The MIT License (MIT)
-
-Copyright (c) 2015-2016 HMT
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+sahib von HMT ist lizenziert unter der MIT-Lizenz.
