@@ -285,7 +285,7 @@ module Sahib
       Sahib.set :repos => repos, :config => @config
       sahib = Sahib.new
       app_stack = [sahib] + create_sahib_repo_apps(repos).compact
-      if ENV['S_REPO_ADMIN']
+      if ENV['S_REPO_ADMIN'] == "true"
         puts "Repository-Administration über die Weboberfläche ist zugelassen"
         SahibRepoAdmin.set :repos => repos, :config => @config
         app_stack.insert(1, SahibRepoAdmin.new)

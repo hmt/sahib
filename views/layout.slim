@@ -75,7 +75,7 @@ html lang="en"
             ul.dropdown-menu
               li
                 a.toggle-warnungen href="#"
-              -if ENV['S_REPO_ADMIN']
+              -if ENV['S_REPO_ADMIN'] == "true"
                 li
                   a#update-repos href="#" Dokumente aktualisieren
                 li
