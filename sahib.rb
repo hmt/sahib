@@ -20,9 +20,12 @@ module Sahib
   class Sahib < Sinatra::Application
     configure do
       puts "Sahib unter schild v#{Schild::VERSION}"
-      use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
-        nutzer = Nutzer.where(:US_LoginName => username).first
-        nutzer && nutzer.password?(password)
+      puts "Passwortabfrage wurde deaktiviert." if ENV['S_NO_PASSWORD'] == "true"
+      unless ENV['S_NO_PASSWORD'] == "true"
+        use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
+          nutzer = Nutzer.where(:US_LoginName => username).first
+          nutzer && nutzer.password?(password)
+        end
       end
       use Rack::Cache,
         metastore:    'file:./tmp/rack/meta',
@@ -53,11 +56,12 @@ module Sahib
     end
 
     get '/*.pdf' do
+      # Setzt PDF Container voraus...
+      halt 404, "Kein PDF-Renderer erreichbar" unless RestClient.get('pdf:3000/').code == 200
       file = Tempfile.new(['id_',  '.pdf'])
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
-      # vorübergehende Lösung. Setzt PDF Container oder electron-pdf voraus ...
       begin
-        doc_url = "http://#{user_pass[:u]}:#{user_pass[:p]}@sahib:9393/cache"
+        doc_url = "http://#{user_pass}@sahib:9393/cache"
         p = {:url => doc_url,
              :accessKey => 2467,
              :landscape => (orientierung == "landscape" ? true : false),
@@ -77,11 +81,9 @@ module Sahib
                                   :block_response => block)
             .execute
         }
-      rescue
-        doc_url = url(url).gsub("//", "//#{user_pass[:u]}:#{user_pass[:p]}@")
-        call = "electron-pdf #{doc_url} #{file.path} -p #{format} #{orientierung=="landscape" ? "-l":""} -m 1"
-        puts call
-        puts `#{call}`
+      rescue Exception => e
+        puts "\n#{e}"
+        halt 500, "Es ist kein PDF-Renderer konfiguriert."
       end
       send_file file, :type => :pdf
     end

@@ -9,8 +9,8 @@ module Helpers
 
   def user_pass
     user = Nutzer.where(:US_LoginName => request.env["REMOTE_USER"]).first
-    {:u => user.login,
-     :p => user.crypt(user.password)}
+    return "" if user.nil?
+    user.login+":"+user.password
   end
 
   def dokumente(repos, fachklasse, abschnitt)
