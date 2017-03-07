@@ -557,7 +557,72 @@ Dazu ein konkretes Beispiel, das sich auch als
 finden lässt. Mit einem GitHub-Nutzer kann man diesen Gist »forken«,
 also eine eigene Kopie erstellen und nach eigenen Wünschen verändern und
 in `sahib` einbinden.
-<script
-src="https://gist.github.com/hmt/5a6236a044f5ac36dd4643c2d98bfbb1.js"></script>
+
+```slim
+//slim-Templates haben nur öffnende Tags und werden mit Hilfe von Leerzeichen
+//verschachtelt. Siehe Dokumentation unter http://slim-lang.com/
+doctype 5
+html lang="en"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    // dieses div hat ein data Attribut mit Informationen für sahib.
+    // Standardwerte sind gelistet unter: https://github.com/hmt/sahib/blob/master/lib/document.rb#L23-L36
+    // logo_top: Logo oben für einge Dokumente
+    // logo_seite: seitliches Logo für einige Dokumente
+    // Deckblatt: Grafik für Deckblatt
+    // Format: z.B. A4, A3 etc
+    // Orientierung: portrait oder landscape
+    // Gruppen: Array mit Anlagebezeichnungen aus den ASD-Angaben, z.B. ["C","D"] für Anlage C und D
+    // Name: Der angezeigte Name im Menü
+    // Layout: legt fest, ob eine layout.slim-Datei verwendet werden soll
+    #doc-einstellungen data-json='{"Name":"Klassenliste", "Layout":false}'
+    // einzubindendes Stylesheet. Verwendet die #url-Funktion, damit
+    // sahib auch ohne die genaue Adresse das Dokument findet.
+    // #url sollte immer verwendet werden
+    link href=url("/css/style.css") rel="stylesheet" media="all"
+  body
+    // .page ist die Klasse, die das Gesamtformat der Seite festlegt.
+    .page
+      // .subpage ist der zu beschreibende Bereich des Dokuments.
+      .subpage
+        |Klassenliste als Beispielreport
+        hr.hr-rot
+        b
+          // schueler ist das von sahib gelieferte Array mit allen Schülern.
+          // unter s wird nun der erste Schüler für allgemeine Daten genutzt
+          -s=schueler.first
+          // man hätte jeden anderen Schüler für diese Daten nutzen können
+          ="#{s.klasse} – #{s.akt_halbjahr.v_name_klassenlehrer}, Stand: #{Time.now.strftime("%d.%m.%Y")}"
+        table
+          // Ab hier werden alle schueler mit Index durchgegangen in einer Schleife
+          // bei jedem Durchgang werden im Block der jeweilige Schüler unter s
+          // abgelegt und der Index unter i
+          -schueler.each_with_index do |s,i|
+            tr
+              td
+                // Index startet bei 0, Listen meistens bei 1
+                =i+1
+              td
+                // enstprechend der Schild-Tabelle ist unter s.name der Nachname abgelegt
+                b =s.name
+              td
+                b =s.vorname
+              td
+                =s.adresse
+              td
+                =s.telefon
+            tr
+              td
+              td
+                // Das Datum muss mit #strftime formatiert werden: Tag. Monat. Jahr
+                =s.geburtsdatum.strftime "%d.%m.%Y"
+              td
+              td
+                =s.e_mail
+              td
+                =s.fax
+```
+
 ## Lizenz
 sahib von HMT ist lizenziert unter der MIT-Lizenz.
