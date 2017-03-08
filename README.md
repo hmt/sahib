@@ -577,14 +577,14 @@ html lang="en"
       Name: Der angezeigte Name im Menü
       Layout: legt fest, ob eine layout.slim-Datei verwendet werden soll
     #doc-einstellungen data-json='{"Name":"Klassenliste", "Layout":false}'
-    / einzubindendes Stylesheet. Verwendet die #url-Funktion, damit
-      sahib auch ohne die genaue Adresse das Dokument findet.
-      #url sollte immer verwendet werden
-      Einstellungen für die Tabelle, damit unter jedem Schüler eine Trennlinie erscheint
+    / Einstellungen für die Tabelle, damit unter jedem Schüler eine Trennlinie erscheint
     css:
       table {border-collapse: collapse;}
       td {padding: 2px;}
       .border_unten {border-bottom: 1pt solid black;}
+    / einzubindendes Stylesheet. Verwendet die #url-Funktion, damit
+      sahib auch ohne die genaue Adresse das Dokument findet.
+      #url sollte immer verwendet werden
     link href=url("/css/style.css") rel="stylesheet" media="all"
   body
   / - leitet Steuercode ein, der Schüler in 'slices' teil, also Abschnitte zu je 20 mit Index
@@ -611,11 +611,13 @@ html lang="en"
             tr
               td
                 / Index startet bei 0, Listen meistens bei 1
+                  Dazu wird dann noch die Anzahl der Slices * 20
+                  gerechnet, damit nicht immer bei 1 angefangen wird
                 =slice_i*20+i+1
               td
                 / enstprechend der Schild-Tabelle ist unter s.name der Nachname abgelegt
                 b =s.name
-              td
+               td
                 b =s.vorname
               td
                 =s.adresse
