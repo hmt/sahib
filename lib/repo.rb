@@ -39,6 +39,11 @@ class Repo
     YAML.load_file file if file
   end
 
+  def abschnitt_fehlt
+    Warnung.add "Dokument", "Schüler ohne Abschnitt. Fehler bei Bildungsgang/Textbausteinen"
+    nil
+  end
+
   def get_textbausteine
     f1 = @location+"/config/textbausteine.yml"
     f2 = @location+"/textbausteine.yml"
@@ -46,6 +51,7 @@ class Repo
   end
 
   def textbaustein(abschnitt, key)
+    return abschnitt_fehlt if abschnitt.nil?
     string = @textbausteine['Textbausteine'][key]
     if string.class == Hash
       zul_jahr = string.keys.sort.reverse
@@ -62,6 +68,7 @@ class Repo
   end
 
   def fachklasse_info(abschnitt, *keys)
+    return abschnitt_fehlt if abschnitt.nil?
     if abschnitt.fachklasse.nil?
       Warnung.add(abschnitt.schueler.name, "Schüler#{abschnitt.schueler.geschlecht == 3 ? "":"in"} ist keiner Fachklasse zugeordnet")
       return "Fachklasse nicht angegeben"

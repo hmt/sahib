@@ -7,6 +7,7 @@ require 'rack/cache'
 require 'json'
 require 'daybreak'
 require 'rest-client'
+require 'nullobject'
 require 'schild'
 include SchildErweitert
 require "#{File.dirname(__FILE__)}/lib/helpers"

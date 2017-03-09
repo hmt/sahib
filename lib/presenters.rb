@@ -29,7 +29,7 @@ module Presenters
         Warnung.add(schueler.name, warn_string(meth))
         ret
       else
-        Null.new
+        Null::Object.instance
       end
     end
 
@@ -43,12 +43,6 @@ module Presenters
       when "sum_fehl_std" then "Keine <em>Fehlstunden</em> angegeben"
       when "sum_fehl_std_u" then "Statt 0 wurden das Feld für unentschuldigte Fehlstunden freigelassen - es wird 0 eingesetzt"
       else "<em>#{meth.to_s}</em> fehlt"
-      end
-    end
-
-    class Null
-      def method_missing(meth, *args)
-        "Fehler"
       end
     end
   end
@@ -104,8 +98,10 @@ module Presenters
 
   class SchuelerPresenter < SimpleDelegatorWrapper
     def halbjahr(jahr, abschnitt)
-      @hj = __getobj__.halbjahr(jahr, abschnitt)
-      (@hj = AbschnittPresenter.new(@hj)) unless @hj.nil?
+      case hj = __getobj__.halbjahr(jahr, abschnitt)
+      when nil then Null::Object.instance
+      else AbschnittPresenter.new(hj)
+      end
     end
 
     def schueler_studierende

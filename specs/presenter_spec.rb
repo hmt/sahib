@@ -24,7 +24,7 @@ describe "Presenter" do
     end
 
     it 'kann auch Null zurückgeben, wenn trotzdem nil kommt, z.B. Assoc' do
-      @s.abi_abschluss.must_be_instance_of Presenters::StringSaver::Null
+      @s.abi_abschluss.must_be_instance_of Null::Object
     end
   end
 

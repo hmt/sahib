@@ -17,6 +17,7 @@ gem 'git'
 gem 'hashids'
 gem 'rest-client'
 gem 'daybreak'
+gem 'nullobject'
 
 group :test do
   gem 'minitest'
