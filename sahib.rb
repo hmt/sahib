@@ -144,7 +144,7 @@ module Sahib
 
     get '/warnungen/warnungen.json' do
       content_type :json
-      Presenters::Warnung.flush.to_json
+      Presenters::Warnung.uniq.to_json
     end
 
     get '/ping' do
@@ -188,6 +188,10 @@ module Sahib
 
     get '/css/:file.css' do
       scss params[:file].intern
+    end
+
+    before do
+      Presenters::Warnung.flush
     end
 
     get '/:doc/:jahr/:abschnitt/:id/?*' do

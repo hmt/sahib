@@ -66,6 +66,7 @@ $(function() {
     $("#vorschau-tab").css("visibility", "visible");
     $('.pdf-button').css("display", "");
     $('#pdf-link').attr("href", this.dataset.pdflink);
+    setTimeout(function(){reload_warnungen()}, 500);
   });
   $("#searchinput").focus();
   $(".clickable-row").click(function() {
@@ -88,6 +89,7 @@ $(function() {
     else {
       localStorage.warnungen = "true";
       link.text("Warnungen ausschalten");
+      reload_warnungen();
     }
   });
 
@@ -125,7 +127,7 @@ $(function() {
         else {
           $('#label-warnungen').hide();
         }
-        if (Object.keys(warnungen).length > 0 && localStorage.warnungen) {
+        if (Object.keys(warnungen).length > 0 && localStorage.warnungen == "true") {
           show_warnungen();
         }
       });
