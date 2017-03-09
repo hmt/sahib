@@ -164,7 +164,8 @@ module Sahib
       schueler_gruppe= Schueler.where(:ID => Array(params[:id].split(","))) #kein [], weil hier mit Dataset gearbeitet wird!
       klasse = Presenters::KlassenPresenter.new(schueler_gruppe)
       halt 404, "Keine Schüler gefunden" if klasse.empty?
-      klassenbezeichnung = params[:klasse] || klasse.first.halbjahr(params[:jahr], params[:abschnitt]).klasse rescue klasse.first.klasse
+      klassenbezeichnung = params[:klasse] || klasse.first.halbjahr(params[:jahr], params[:abschnitt]).klasse
+      klassenbezeichnung = klasse.s.klasse if klassenbezeichnung.nil?
       versetzung = Versetzung.eager(:fachklasse).first(:Klasse => klassenbezeichnung)
       abschnitt = (params[:abschnitt] ? params[:abschnitt].to_i : klasse.s.akt_abschnitt)
       slim params[:doc].to_sym, :locals => { :klasse => klasse,

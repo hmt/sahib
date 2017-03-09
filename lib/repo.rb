@@ -41,7 +41,6 @@ class Repo
 
   def abschnitt_fehlt
     Warnung.add "Dokument", "Schüler ohne Abschnitt. Fehler bei Bildungsgang/Textbausteinen"
-    nil
   end
 
   def get_textbausteine
