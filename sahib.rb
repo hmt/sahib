@@ -91,8 +91,8 @@ module Sahib
 
     get '/suche/schueler/autocomplete.json' do
       content_type :json
-      schueler = Schueler.where("Name LIKE :name OR Vorname LIKE :name",
-                                :name => "#{params[:pattern]}%").limit(30)
+      lit = Sequel.lit("Name LIKE :name OR Vorname LIKE :name", {:name=> "#{params[:pattern]}%"})
+      schueler = Schueler.where(lit).limit(30)
       if schueler.empty?
         halt 404
       else
