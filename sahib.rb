@@ -116,7 +116,7 @@ module Sahib
             jahrgaenge.map{ |jahrgang,schueler_| {:value => "#{klasse} (#{schueler_.count{|s| s.status == 2}}), #{jahrgang}",
                                                   :link => "/auswahl/klasse/#{jahrgang}/#{schueler.map{|s|s.id}.join(",")}"} }.reverse
           else
-            ss = schueler.max_by{ |s| s.akt_schuljahr }
+            ss = schueler.max_by{ |s| s.akt_schuljahr+s.akt_abschnitt }
             {:value => "#{klasse} (#{schueler.count{|s| s.status == 2}})",
              :link => "/auswahl/klasse/#{ss.akt_schuljahr}/#{ss.akt_abschnitt}/#{schueler.map{|s|s.id}.join(",")}"}
           end
@@ -279,6 +279,7 @@ module Sahib
   class << self
     def run_sahib
       @config = Daybreak::DB.new "./config/#{ENV['DATENBANK']}.db"
+      at_exit {@config.close; puts "Konfigurationsdatenbank »#{ENV['DATENBANK']}« geschlossen"}
 
       if @config.empty?
         puts "Erstelle neue Konfigurationsdatenbank »#{ENV['DATENBANK']}«"
