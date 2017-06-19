@@ -59,8 +59,8 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
       spoon (~> 0.0)
-    puma (3.9.1)
-    puma (3.9.1-java)
+    puma (3.8.2)
+    puma (3.8.2-java)
     rack (2.0.3)
     rack-cache (1.7.0)
       rack (>= 0.4)
@@ -124,7 +124,7 @@ DEPENDENCIES
   pg
   pg_jruby (= 0.17.1)!
   pry
-  puma
+  puma (~> 3.8.0)
   rack-cache
   rack-test
   rake
