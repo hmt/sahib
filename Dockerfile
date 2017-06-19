@@ -1,4 +1,4 @@
-FROM ruby:slim
+FROM ruby:2.4.1-slim
 MAINTAINER hmt <dev@hmt.im>
 
 RUN apt-get update && apt-get install -y \
@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
       libpq-dev \
       build-essential \
       git && \
-    mkdir /app
+    mkdir /app \
+    gem install rubygems-update bundler
 
 ENV APP /app
 ENV LANG C.UTF-8
