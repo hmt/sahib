@@ -84,14 +84,14 @@ Please note, that loaded `<script>` and `<style>` will be executed every time HT
 
 	```html
 	<template is="juicy-html" content="<b>some</b> HTML"></template>
-	<!-- Or <template is="juicy-html" content="{{var}}"></template> where {{ var }} equals "<b>some</b> HTML" -->
+	<!-- Or <template is="juicy-html" content$="{{var}}"></template> where {{ var }} equals "<b>some</b> HTML" -->
 	```
 
 	Load HTML partial from a URL:
 
 	```html
 	<template is="juicy-html" content="./path/to/file.html"></template>
-	<!-- Or <template is="juicy-html" content="{{var}}"></template>
+	<!-- Or <template is="juicy-html" content$="{{var}}"></template>
 	     where {{var}} equals "./path/to/file.html", a path relative to the document that must start with / or ./ -->
 	```
 
@@ -145,4 +145,4 @@ For detailed changelog, check [Releases](https://github.com/Juicy/juicy-element/
 
 ## License
 
-[MIT License](http://opensource.org/licenses/MIT)
+MIT

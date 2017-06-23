@@ -17,6 +17,8 @@
   ],
   "dependencies": {
     "paper-progress": "PolymerElements/paper-progress#^1.0.11",
-    "juicy-html": "Juicy/juicy-html#^1.1.0"
+    "juicy-html": "Juicy/juicy-html#^1.1.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.1",
+    "shadydom": "webcomponents/shadydom#^1.0.0"
   }
 }

@@ -1,14 +1,11 @@
 language: node_js
-sudo: false
+sudo: required
+dist: trusty
 before_script:
   - npm install web-component-tester
   - npm install bower
   - 'export PATH=$PWD/node_modules/.bin:$PATH'
   - bower install
-branches:
-  only:
-    - gh-pages
-    - master
 node_js: 4
 addons:
   firefox: latest

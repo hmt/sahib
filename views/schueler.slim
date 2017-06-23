@@ -87,4 +87,12 @@
                   -a.columns.each do |c|
                     dt =c.to_s
                     dd =a[c].to_s
-
+javascript:
+  var vorschauDom = document.querySelector('#vorschau-dom')
+  var shadow;
+  if (typeof vorschauDom.attachShadow === "function") {
+    shadow =  vorschauDom.attachShadow({mode: 'closed'});
+  }
+  else {
+    shadow =  vorschauDom.createShadowRoot();
+  }

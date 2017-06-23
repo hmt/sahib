@@ -1,6 +1,4 @@
 $(function() {
-  var shadow = document.querySelector('#vorschau-dom')
-    .attachShadow({mode: 'closed'});
   var status = function(s,j) {
     var color;
     var text = "✓";

@@ -49,3 +49,12 @@
         .row
           .col-xs-12
             #vorschau-dom
+javascript:
+  var vorschauDom = document.querySelector('#vorschau-dom')
+  var shadow;
+  if (typeof vorschauDom.attachShadow === "function") {
+    shadow =  vorschauDom.attachShadow({mode: 'closed'});
+  }
+  else {
+    shadow =  vorschauDom.createShadowRoot();
+  }

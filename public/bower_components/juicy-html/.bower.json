@@ -1,7 +1,7 @@
 {
   "name": "juicy-html",
   "description": "Custom Element that lets you load HTML partials into your Web Components",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "homepage": "https://github.com/Juicy/juicy-html",
   "authors": [
     "Joachim Wester <joachimwester@me.com>",
@@ -20,21 +20,21 @@
     "examples",
     "index.html",
     ".gitignore",
-    "test"
+    "test",
+    ".github"
   ],
   "dependencies": {},
   "devDependencies": {
     "polymer": "Polymer/polymer#>=1.1.5",
     "web-component-tester": "Polymer/web-component-tester#>=4.2.2"
   },
-  "_release": "1.1.0",
+  "_release": "1.2.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.1.0",
-    "commit": "169b878d6c0e64c5fc8f726506d78dcfa6d71e87"
+    "tag": "1.2.0",
+    "commit": "984a06d8e7e48b3a2b5b663fe3aae328847c6e97"
   },
   "_source": "https://github.com/Juicy/juicy-html.git",
   "_target": "^1.1.0",
-  "_originalSource": "Juicy/juicy-html",
-  "_direct": true
+  "_originalSource": "Juicy/juicy-html"
 }
