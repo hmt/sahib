@@ -1,7 +1,6 @@
 $(function() {
-  document.documentElement.addEventListener('stamped', function(e){
-    $('paper-progress').attr('disabled', true);
-  }, true);
+  var shadow = document.querySelector('#vorschau-dom')
+    .attachShadow({mode: 'closed'});
   var status = function(s,j) {
     var color;
     var text = "✓";
@@ -56,11 +55,10 @@ $(function() {
     });
 
   $(".frame-link").click(function(event) {
-    var href = $(this).attr("href");
     event.preventDefault();
-    $('paper-progress').attr('disabled', false);
+    var href = $(this).attr("href");
     $("#doc-frame").remove();
-    $("#vorschau-dom").append('<template id="doc-frame" is="juicy-html" content='+href+' on-stamped="stamped"></template>');
+    shadow.innerHTML = '<template id="doc-frame" is="juicy-html" content='+href+' on-stamped="stamped"></template>';
     $('a[href="#vorschau"]')
       .tab('show');
     $("#vorschau-tab").css("visibility", "visible");
