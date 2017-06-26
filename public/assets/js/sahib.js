@@ -59,6 +59,7 @@ $(function() {
     shadow.innerHTML = '<template id="doc-frame" is="juicy-html" content='+href+' on-stamped="stamped"></template>';
     $('a[href="#vorschau"]')
       .tab('show');
+    $('#direktlink-vorschau').attr("href", href).text(href);
     $("#vorschau-tab").css("visibility", "visible");
     $('.pdf-button').css("display", "");
     $('#pdf-link').attr("href", this.dataset.pdflink);

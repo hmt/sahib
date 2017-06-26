@@ -375,6 +375,11 @@ module Sahib
                          'views']
             set :public_folder, repo.location+"/public"
             set :logging, true
+            if File.exist?(repo.location+"/lib/helpers.rb")
+              puts "Modul »Helpers« vorhanden, wird eingebunden."
+              require repo.location+"/lib/helpers"
+              helpers Helpers
+            end
           end
           run repo_app
         end
