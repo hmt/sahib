@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 gem 'jdbc-mysql', :platforms => :jruby
 gem 'mysql2', :platforms => :ruby
-gem 'schild', :git => 'https://github.com/hmt/schild.git', :branch => 'master'
+gem 'schild'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'rack-cache'

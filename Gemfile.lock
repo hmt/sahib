@@ -5,14 +5,6 @@ GIT
   specs:
     pg_jruby (0.17.1)
 
-GIT
-  remote: https://github.com/hmt/schild.git
-  revision: b878e94ba84d088df012758c9af65a89960bc504
-  branch: master
-  specs:
-    schild (0.8.0)
-      sequel (~> 5)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -88,6 +80,8 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
+    schild (0.8.0)
+      sequel (~> 5)
     sequel (5.0.0)
     sinatra (2.0.0)
       mustermann (~> 1.0)
@@ -138,7 +132,7 @@ DEPENDENCIES
   rake
   rest-client
   sass
-  schild!
+  schild
   sinatra
   sinatra-contrib
   slim
