@@ -1,9 +1,6 @@
 source 'https://rubygems.org'
 gem 'jdbc-mysql', :platforms => :jruby
-gem 'pg_jruby', '0.17.1', :platforms => :jruby, :git => 'https://github.com/headius/jruby-pg.git', :branch => :master
-
 gem 'mysql2', :platforms => :ruby
-gem 'pg', :platforms => :ruby
 gem 'schild', :git => 'https://github.com/hmt/schild.git', :branch => 'master'
 gem 'sinatra'
 gem 'sinatra-contrib'
@@ -14,10 +11,14 @@ gem 'json'
 gem 'puma', '~> 3.8.0'
 gem 'oga'
 gem 'git'
-gem 'hashids'
 gem 'rest-client'
 gem 'daybreak'
 gem 'nullobject'
+
+# Gems für Erweiterungen
+gem 'hashids'
+gem 'pg', :platforms => :ruby
+gem 'pg_jruby', '0.17.1', :platforms => :jruby, :git => 'https://github.com/headius/jruby-pg.git', :branch => :master
 
 group :test do
   gem 'minitest'
