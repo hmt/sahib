@@ -24,8 +24,8 @@
               table.table.table-condensed
                 tr
                   th
-                    th Vorname
                   th Name
+                  th Vorname
                   th Adresse
                   th Telefon
                   th Geburtsdatum
@@ -34,8 +34,8 @@
                   tr.clickable-row data-url="/auswahl/schueler/#{s.id}"
                     td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
                       =i+1
-                    td =s.vorname
                     td =s.name
+                    td =s.vorname
                     td =s.adresse
                     td =s.telefon
                     td class=(s.volljaehrig_bei?(Time.now) ? "success" : "danger")
