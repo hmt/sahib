@@ -19,6 +19,7 @@ gem 'nullobject'
 gem 'hashids'
 gem 'pg', :platforms => :ruby
 gem 'pg_jruby', '0.17.1', :platforms => :jruby, :git => 'https://github.com/headius/jruby-pg.git', :branch => :master
+gem 'redcarpet'
 
 group :test do
   gem 'minitest'
