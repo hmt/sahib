@@ -62,7 +62,8 @@ module Sahib
       file = Tempfile.new(['id_',  '.pdf'])
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
       begin
-        doc_url = "http://#{user_pass}@sahib:9393/cache"
+        doc_url = "http://sahib:9393/cache"
+        user, password = user_pass
         p = {:url => doc_url,
              :accessKey => 2467,
              :landscape => (orientierung == "landscape" ? true : false),
@@ -78,6 +79,8 @@ module Sahib
           }
           RestClient::Request.new(:method => :get,
                                   :url => 'pdf:3000/pdf',
+                                  :user => user,
+                                  :password => password,
                                   :headers => {:params => p},
                                   :block_response => block)
             .execute
