@@ -7,12 +7,6 @@ module Helpers
     views.each { |v| super(v, name, engine, &block) }
   end
 
-  def user_pass
-    user = Nutzer.where(:US_LoginName => request.env["REMOTE_USER"]).first
-    return "" if user.nil?
-    [user.login, user.crypt(user.password)]
-  end
-
   def dokumente(repos, fachklasse, abschnitt)
     ary = repos.select{|r|r.enabled?}.map do |repo|
       docs = repo.documents.select do |d|

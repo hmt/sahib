@@ -18,16 +18,20 @@ require "#{File.dirname(__FILE__)}/lib/easter"
 # require 'pry' if development?
 
 module Sahib
+  class SahibLogin < Sinatra::Application
+    configure do
+      use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
+        nutzer = Nutzer.where(:US_LoginName => username).first
+        nutzer && nutzer.password?(password)
+      end
+    end
+
+    get '/' do; end
+  end
+
   class Sahib < Sinatra::Application
     configure do
       puts "Sahib unter schild v#{Schild::VERSION}"
-      puts "Passwortabfrage wurde deaktiviert." if ENV['S_NO_PASSWORD'] == "true"
-      unless ENV['S_NO_PASSWORD'] == "true"
-        use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
-          nutzer = Nutzer.where(:US_LoginName => username).first
-          nutzer && nutzer.password?(password)
-        end
-      end
       use Rack::Cache,
         metastore:    'file:./tmp/rack/meta',
         entitystore:  'file:./tmp/rack/body',
@@ -63,7 +67,6 @@ module Sahib
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
       begin
         doc_url = "http://sahib:9393/cache"
-        user, password = user_pass
         p = {:url => doc_url,
              :accessKey => 2467,
              :landscape => (orientierung == "landscape" ? true : false),
@@ -79,8 +82,6 @@ module Sahib
           }
           RestClient::Request.new(:method => :get,
                                   :url => 'pdf:3000/pdf',
-                                  :user => user,
-                                  :password => password,
                                   :headers => {:params => p},
                                   :block_response => block)
             .execute
@@ -302,7 +303,10 @@ module Sahib
         SahibRepoAdmin.set :repos => repos, :config => @config
         app_stack.insert(1, SahibRepoAdmin.new)
       end
-      Rack::Cascade.new (app_stack)
+      Rack::Builder.new do
+        map('/'){run Rack::Cascade.new (app_stack)}
+        map('/login'){run SahibLogin.new}
+      end
     end
 
     protected
