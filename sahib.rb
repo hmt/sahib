@@ -283,7 +283,7 @@ module Sahib
   class << self
     def run_sahib
       @config = Daybreak::DB.new "./config/#{ENV['DATENBANK']}.db"
-      at_exit {@config.close; puts "Konfigurationsdatenbank »#{ENV['DATENBANK']}« geschlossen"}
+      at_exit {@config.compact.close; puts "Konfigurationsdatenbank »#{ENV['DATENBANK']}« geschlossen"}
 
       if @config.empty?
         puts "Erstelle neue Konfigurationsdatenbank »#{ENV['DATENBANK']}«"
