@@ -63,9 +63,12 @@ module Sahib
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
       begin
         doc_url = "http://sahib:9393/cache"
+        user = Nutzer.where(:US_LoginName => request.env["REMOTE_USER"]).first
         p = {:url => doc_url,
              :landscape => (orientierung == "landscape" ? true : false),
-             :format => format
+             :format => format,
+             :user => user.login,
+             :password => user.crypt(user.password)
         }
         File.open(file, 'w') {|f|
           block = proc { |response|
