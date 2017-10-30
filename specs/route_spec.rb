@@ -2,28 +2,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 include SpecHelper
 
 describe "routes" do
-  describe 'basic auth' do
-    it "ohne auth" do
-      get '/'
-      last_response.status.must_equal 401
-    end
-    it "falsche auth" do
-      authorize 'oh', 'ah'
-      get '/'
-      last_response.status.must_equal 401
-    end
-    it "korrekte auth" do
-      authorize 'admin', ''
-      get '/'
-      last_response.status.must_equal 200
-    end
-  end
-
   describe "Views ok" do
-    before do
-      authorize 'admin', ''
-    end
-
     it "gibt repos 200 zurück" do
       get '/repos'
       last_response.status.must_equal 200
