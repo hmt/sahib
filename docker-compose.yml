@@ -1,19 +1,55 @@
-version: '2.1'
+version: '3.3'
+
+networks:
+  proxy:
+    external: true
+  internal:
+    external: false
+
 services:
+  traefik:
+    image: traefik:latest
+    command: --configFile=/var/traefik/traefik.toml
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik.toml:/var/traefik/traefik.toml
+    labels:
+      - traefik.port=8080
+    network:
+      - proxy
+
   sahib:
     image: hmtx/sahib:latest
     command: bundle exec puma
     volumes:
       - ./plugins:/app/plugins
       - ./config:/app/config
-    ports:
-      - "80:9393"
     depends_on:
       - pdf
       - db
     env_file:
       - config/${DATENBANK:-beispiel}.env
+    labels:
+      - traefik.frontend.rule=PathPrefixStrip:/
+      - traefik.docker.network=proxy
+      - traefik.port=9393
+    networks:
+      - internal
+      - proxy
+
   pdf:
-    image: hmtx/electron_pdf:latest
+    image: hmtx/puppeteer-pdf:latest
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false
+
   db:
     image: hmtx/mariadb:latest
+    networks:
+      - internal
+    labels:
+      - traefik.enable=false

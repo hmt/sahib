@@ -1,0 +1,11 @@
+defaultEntryPoints = ["http"]
+
+[entryPoints]
+    [entryPoints.http]
+    address = ":80"
+
+[web]
+address = ":8080"
+
+[docker]
+watch = true
