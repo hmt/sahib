@@ -65,7 +65,7 @@ module Sahib
         doc_url = "http://sahib:9393/cache"
         user = Nutzer.where(:US_LoginName => request.env["REMOTE_USER"]).first
         p = {:url => doc_url,
-             :landscape => (orientierung == "landscape" ? true : false),
+             :landscape => (orientierung == "landscape" ? "true" : "false"),
              :format => format,
              :user => user.login,
              :password => user.crypt(user.password)
