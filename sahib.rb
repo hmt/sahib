@@ -62,17 +62,14 @@ module Sahib
 
     get '/*.pdf' do
       # Setzt PDF Container voraus...
-      halt 404, "Kein PDF-Renderer erreichbar" unless RestClient.get('pdf:3000/').code == 200
+      # halt 404, "Kein PDF-Renderer erreichbar" unless RestClient.get('pdf:3000/').code == 200
       file = Tempfile.new(['id_',  '.pdf'])
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
       begin
         doc_url = "http://sahib:9393/cache"
         p = {:url => doc_url,
-             :accessKey => 2467,
              :landscape => (orientierung == "landscape" ? true : false),
-             :printBackground => true,
-             :pageSize => format,
-             :marginsType => 1
+             :format => format
         }
         File.open(file, 'w') {|f|
           block = proc { |response|
