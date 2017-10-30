@@ -18,20 +18,16 @@ require "#{File.dirname(__FILE__)}/lib/easter"
 # require 'pry' if development?
 
 module Sahib
-  class SahibLogin < Sinatra::Application
-    configure do
-      use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
-        nutzer = Nutzer.where(:US_LoginName => username).first
-        nutzer && nutzer.password?(password)
-      end
-    end
-
-    get '/' do; end
-  end
-
   class Sahib < Sinatra::Application
     configure do
       puts "Sahib unter schild v#{Schild::VERSION}"
+      if ENV['S_AUTH'] != "false"
+        puts "Basic Authentication aktiviert. Schildbenutzer verwenden."
+        use Rack::Auth::Basic, "Zur Anmeldung bitte Schildbenutzer verwenden" do |username, password|
+          nutzer = Nutzer.where(:US_LoginName => username).first
+          nutzer && nutzer.password?(password)
+        end
+      end
       use Rack::Cache,
         metastore:    'file:./tmp/rack/meta',
         entitystore:  'file:./tmp/rack/body',
@@ -300,10 +296,7 @@ module Sahib
         SahibRepoAdmin.set :repos => repos, :config => @config
         app_stack.insert(1, SahibRepoAdmin.new)
       end
-      Rack::Builder.new do
-        map('/'){run Rack::Cascade.new (app_stack)}
-        map('/login'){run SahibLogin.new}
-      end
+      Rack::Cascade.new (app_stack)
     end
 
     protected
@@ -380,7 +373,7 @@ module Sahib
             set :public_folder, repo.location+"/public"
             set :logging, true
             if File.exist?(repo.location+"/lib/helpers.rb")
-              puts "Modul »Helpers« vorhanden, wird eingebunden."
+              puts "Modul »#{repo.repo_name}/Helpers« vorhanden, wird eingebunden."
               require repo.location+"/lib/helpers"
               helpers Helpers
             end
