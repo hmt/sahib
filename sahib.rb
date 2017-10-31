@@ -57,8 +57,6 @@ module Sahib
     end
 
     get '/*.pdf' do
-      # Setzt PDF Container voraus...
-      # halt 404, "Kein PDF-Renderer erreichbar" unless RestClient.get('pdf:3000/').code == 200
       file = Tempfile.new(['id_',  '.pdf'])
       format, orientierung = params[:pdf_format], params[:pdf_orientierung]
       begin
