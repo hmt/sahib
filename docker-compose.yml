@@ -18,7 +18,7 @@ services:
       - $PWD/traefik.toml:/var/traefik/traefik.toml
     labels:
       - traefik.port=8080
-    network:
+    networks:
       - proxy
 
   sahib:
